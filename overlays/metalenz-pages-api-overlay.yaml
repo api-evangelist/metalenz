@@ -1,0 +1,47 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Metalenz Pages API
+  version: 1.0.0
+extends: openapi/metalenz-pages-api-openapi.yml
+x-generated: '2026-08-25'
+x-method: generated
+x-note: Metalenz publishes no OpenAPI. The document this overlay extends was derived by API Evangelist from the
+  server's own route index and HTTP OPTIONS schema documents. These actions record the enhancements API Evangelist
+  added on top of that derivation — provenance, consumption guidance and cross-links to the artifacts in this repo
+  — so the derived spec can be regenerated from the live host without losing them.
+actions:
+- target: $.info
+  update:
+    x-apievangelist-profile: https://github.com/api-evangelist/metalenz
+    x-apievangelist-derived: route index + HTTP OPTIONS schema documents on https://metalenz.com/wp-json/, 2026-08-25
+    x-apievangelist-provider-published-spec: false
+    x-apievangelist-surface: Incidental WordPress REST content API behind the marketing site of a fabless meta-optics
+      semiconductor company; not a product API. Metalenz sells optical components and IP, and its actual product
+      documentation is gated behind Microsoft Entra ID at docs.metalenz.com.
+- target: $.info
+  update:
+    x-artifacts:
+      authentication: authentication/metalenz-authentication.yml
+      errors: errors/metalenz-problem-types.yml
+      conventions: conventions/metalenz-conventions.yml
+      lifecycle: lifecycle/metalenz-lifecycle.yml
+      rate_limits: rate-limits/metalenz-rate-limits.yml
+      examples: examples/metalenz-examples.yml
+      data_model: data-model/metalenz-data-model.yml
+      conformance: conformance/metalenz-conformance.yml
+- target: $.servers[0]
+  update:
+    x-anonymous-read: true
+    x-write-requires: WordPress application password; no public issuance path.
+    x-edge: Pantheon origin behind Fastly; cache-control public, max-age=604800.
+- target: $.paths.*.get
+  update:
+    x-agentic-access:
+      action-class: connected
+      consequence: read
+      subject: optional
+      token:
+        max-ttl: 3600
+      audit: none
+    x-consumption-note: Send _fields to trim the response; an unfiltered page record is roughly 22KB because content.rendered
+      carries the full page HTML.

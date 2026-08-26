@@ -1,0 +1,166 @@
+generated: '2026-08-25'
+method: derived
+source: openapi/*.yml ($ref links + id-reference fields) + live records from https://metalenz.com/wp-json/
+description: >-
+  The entity-relationship graph of the metalenz.com WordPress REST content API, derived from the
+  JSON Schema documents the server publishes via HTTP OPTIONS and from the `_links` relations
+  present on live records. Identifiers are plain integers — this surface has no prefixed or typed
+  ids.
+identifiers:
+  scheme: integer
+  detail: >-
+    Every object is keyed by a site-local auto-increment integer. Posts, pages and attachments
+    share one id space (they are all WordPress posts); terms have their own. There is no
+    id-prefix convention, no UUID and no cross-site stable identifier. The only globally unique
+    handle is `guid.rendered`, which is a URL and is explicitly not resolvable as an API address.
+entities:
+- name: Post
+  rest_base: posts
+  label_on_this_site: Press Releases
+  count: 26
+  schema: openapi/metalenz-press-releases-api-openapi.yml#/components/schemas/Post
+  key: id
+- name: Page
+  rest_base: pages
+  count: 29
+  schema: openapi/metalenz-pages-api-openapi.yml#/components/schemas/Page
+  key: id
+- name: Attachment
+  rest_base: media
+  count: 418
+  schema: openapi/metalenz-media-api-openapi.yml#/components/schemas/Attachment
+  key: id
+- name: Category
+  rest_base: categories
+  taxonomy: category
+  count: 1
+  schema: openapi/metalenz-taxonomy-api-openapi.yml#/components/schemas/Category
+  key: id
+- name: Tag
+  rest_base: tags
+  taxonomy: post_tag
+  count: 2
+  schema: openapi/metalenz-taxonomy-api-openapi.yml#/components/schemas/Tag
+  key: id
+- name: User
+  rest_base: users
+  count: 3
+  schema: openapi/metalenz-discovery-api-openapi.yml#/components/schemas/User
+  key: id
+  note: Public authors only. Personal data — see the PII note below.
+- name: Comment
+  rest_base: comments
+  count: 0
+  schema: openapi/metalenz-discovery-api-openapi.yml#/components/schemas/Comment
+  key: id
+- name: Type
+  rest_base: types
+  count: 12
+  schema: openapi/metalenz-discovery-api-openapi.yml#/components/schemas/Type
+  key: slug
+- name: Taxonomy
+  rest_base: taxonomies
+  count: 4
+  schema: openapi/metalenz-discovery-api-openapi.yml#/components/schemas/Taxonomy
+  key: slug
+- name: Status
+  rest_base: statuses
+  count: 2
+  schema: openapi/metalenz-discovery-api-openapi.yml#/components/schemas/Status
+  key: slug
+- name: SearchResult
+  rest_base: search
+  schema: openapi/metalenz-search-api-openapi.yml#/components/schemas/SearchResult
+  key: id
+  note: A projection, not a stored entity. Carries id + type + subtype, which resolve back to a Post or Page.
+relationships:
+- from: Post
+  to: User
+  kind: belongs_to
+  via: author
+  detail: Integer user id; also exposed as the `author` link relation.
+- from: Post
+  to: Attachment
+  kind: belongs_to
+  via: featured_media
+  detail: Integer attachment id, 0 when unset; exposed as the wp:featuredmedia relation.
+- from: Post
+  to: Category
+  kind: has_many
+  via: categories
+  detail: Array of term ids; exposed as a wp:term relation with taxonomy=category.
+- from: Post
+  to: Tag
+  kind: has_many
+  via: tags
+  detail: Array of term ids; exposed as a wp:term relation with taxonomy=post_tag.
+- from: Post
+  to: Type
+  kind: belongs_to
+  via: type
+  detail: Slug of the registered post type — "post" on this surface, labelled "Press Releases".
+- from: Post
+  to: Status
+  kind: belongs_to
+  via: status
+  detail: Only `publish` is visible anonymously.
+- from: Page
+  to: Page
+  kind: belongs_to
+  via: parent
+  detail: >-
+    Pages nest. On metalenz.com the PolarEyes page is the parent of the Polar ID, Polar ID (zh) and
+    Polar 3D pages, which is why those live at /polareyes-polarization-imaging-system/polar-id/.
+- from: Page
+  to: User
+  kind: belongs_to
+  via: author
+- from: Page
+  to: Attachment
+  kind: belongs_to
+  via: featured_media
+- from: Attachment
+  to: Post
+  kind: belongs_to
+  via: post
+  detail: The post or page the attachment was uploaded to, when any.
+- from: Attachment
+  to: User
+  kind: belongs_to
+  via: author
+- from: Category
+  to: Category
+  kind: belongs_to
+  via: parent
+  detail: Categories are hierarchical. Only one term exists on this site, so the hierarchy is flat in practice.
+- from: Tag
+  to: Post
+  kind: has_many
+  via: count
+  detail: Non-hierarchical; the term record carries a denormalised post count and a wp:post_type link.
+- from: Comment
+  to: Post
+  kind: belongs_to
+  via: post
+- from: Comment
+  to: Comment
+  kind: belongs_to
+  via: parent
+- from: Taxonomy
+  to: Type
+  kind: has_many
+  via: types
+  detail: Which post types a taxonomy applies to. category and post_tag both apply to `post` only.
+pii:
+  present: true
+  entities: [User, Comment]
+  detail: >-
+    GET /wp/v2/users returns three real WordPress accounts with display name, slug, description,
+    avatar URLs and author-archive link. Email address, registration date, roles and capabilities
+    are `edit`-context and are withheld from anonymous callers, so no contact detail is exposed —
+    but the display names are personal data. This artifact documents the SHAPE of that endpoint and
+    deliberately names no individual, no example response containing a real person is stored
+    anywhere in this repository, and no agent skill or MCP tool is emitted for the users route.
+    See skills/_index.yml for the recorded exclusion.
+render: null
+render_note: No subway/ diagram exists for this repo yet.

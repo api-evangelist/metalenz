@@ -1,0 +1,124 @@
+generated: '2026-08-25'
+method: probed
+source: https://metalenz.com/wp-json/ + live header observation + DNS probes
+description: >-
+  Metalenz publishes no versioning policy, no deprecation policy, no SLA and no status page for the
+  content API behind metalenz.com. Everything below is what could be observed; the absences are the
+  finding.
+versioning:
+  scheme: uri-path namespace
+  current: wp/v2
+  platform_version: WordPress 6.8.2
+  namespaces_registered: 13
+  docs: null
+  detail: >-
+    The version is a path namespace inherited from WordPress core and its plugins, not a contract
+    Metalenz maintains. It changes when the site is upgraded, on the site owner's schedule, with no
+    announcement channel. The platform version is self-reported in the feed generator tag and in
+    asset query strings.
+deprecation:
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  detail: >-
+    No RFC 8594 Sunset or Deprecation header was observed on any response, and no deprecation
+    policy is published. A route can disappear when a plugin is deactivated — the akismet, leadin
+    (HubSpot), redirection, rankmath (four namespaces), webp-converter and gravityforms namespaces
+    account for roughly 80 of the 212 routes and are under no stability commitment to third
+    parties. The seven APIs documented in this repo deliberately sit only in core wp/v2 and
+    oembed/1.0, which are the most stable part of the surface.
+sla:
+  url: null
+  uptime_target: null
+status_page:
+  url: null
+  detail: >-
+    No status page exists. status.metalenz.com does not resolve, and no third-party status host is
+    linked from the site. No StatusPage pointer is emitted in apis.yml.
+changelog:
+  url: null
+  detail: >-
+    No API changelog. The nearest dated public signal is the press-release archive (26 posts) and
+    its RSS feed at https://metalenz.com/feed/, which covers company news rather than API change.
+    No ChangeLog pointer is emitted in apis.yml, because a company newsroom is not a change log for
+    this API.
+support:
+  api_support_channel: null
+  general_contact: https://metalenz.com/contact-us/
+  sales_email: sales@metalenz.com
+  detail: >-
+    The contact page is a Gravity Forms enquiry form routed to sales, and the gravityforms/v2
+    namespace is registered on the REST API but every operation in it except the i18n mock-data
+    fixture is credential-gated. There is no developer support channel, no forum and no help
+    center. The Support pointer in apis.yml points at the general contact form, which is the only
+    channel that exists.
+documentation_portal:
+  url: https://docs.metalenz.com/
+  status: gated
+  detail: >-
+    docs.metalenz.com resolves and serves a two-line landing page titled "Metalenz Documentation"
+    with a single link to /documentation/. That path 301s to /documentation/ and then redirects
+    into Microsoft Entra ID for the Metalenz tenant, so the content behind it is reachable only by
+    account holders — customers, licensees and foundry partners. This is a real documentation
+    programme for the company's optics products, and it is entirely closed to the public. No
+    Documentation pointer is emitted in apis.yml: the page delivers no readable documentation to an
+    unauthenticated reader, and crediting it would score a gate as a publication. It is recorded as
+    a DocumentationPortal pointer instead so the surface is visible without being scored.
+content_freshness:
+  latest_post_date: '2026-05-04'
+  latest_page_modified: '2026-07-20'
+  detail: >-
+    The newsroom's most recent press release is dated 2026-05-04 (the under-display Polar ID
+    launch) and the most recently modified page is /events/ at 2026-07-20. The corpus is current —
+    unusually so for this class of profile.
+infrastructure:
+  origin: Pantheon (nginx)
+  edge: Fastly (varnish)
+  detail: >-
+    Responses carry x-pantheon-styx-hostname, x-styx-req-id and Fastly's x-served-by / x-cache /
+    x-timer. cache-control is public, max-age=604800, so an agent may be served a week-old edge
+    copy of a collection. One route, POST /batch/v1, is blocked at the edge with a plain-text 403
+    that never reaches WordPress.
+related_hosts:
+- host: docs.metalenz.com
+  status: live-gated
+  detail: 137.184.70.206, Apache/2.4.29 (Ubuntu). Entra ID gate as described above.
+- host: status.metalenz.com
+  status: nxdomain
+- host: api.metalenz.com
+  status: nxdomain
+- host: developer.metalenz.com
+  status: nxdomain
+  detail: >-
+    Probed explicitly because their absence is the evidence that no developer programme exists —
+    none of the three resolves.
+deprecated_operations: []
+stability_assessment:
+  grade: unmanaged
+  detail: >-
+    Consume defensively. This is a marketing site's CMS API with no versioning commitment, no
+    deprecation notice period, no status page and no support channel. All 23 documented operations
+    sit in core wp/v2 and oembed/1.0, which are the most stable part of the surface, but Metalenz
+    makes no promise about any of them and would not consider a breaking change to be one.
+evidence:
+- url: https://metalenz.com/wp-json/
+  http_status: 200
+  finding: 212 routes across 13 namespaces; no versioning or deprecation metadata.
+- host: status.metalenz.com
+  dns: NXDOMAIN
+  finding: No status page host.
+- host: api.metalenz.com
+  dns: NXDOMAIN
+  finding: No API host.
+- host: developer.metalenz.com
+  dns: NXDOMAIN
+  finding: No developer portal host.
+- url: https://metalenz.com/wp-json/wp/v2/posts?per_page=2
+  http_status: 200
+  finding: No Sunset or Deprecation response header. Latest press release 2026-05-04.
+- url: https://metalenz.com/page-sitemap.xml
+  http_status: 200
+  finding: 28 page entries; newest lastmod 2026-07-20T20:44:41+00:00.
+- url: https://docs.metalenz.com/documentation
+  http_status: 301
+  finding: 301 to /documentation/, then a redirect into login.microsoftonline.com.

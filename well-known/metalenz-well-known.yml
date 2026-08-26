@@ -1,0 +1,58 @@
+generated: '2026-08-25'
+method: probed
+source: live probes of https://metalenz.com/.well-known/* and https://docs.metalenz.com/.well-known/*
+description: >-
+  Every /.well-known/ discovery path on both Metalenz-controlled hosts returned 404. A control
+  probe of a nonsense /.well-known/ path also returned 404, so neither host is a catch-all and
+  these are genuine absences rather than false negatives. No WellKnown or SecurityTxt pointer is
+  emitted in apis.yml, because a pointer would assert that Metalenz serves a discovery surface it
+  does not serve.
+hosts:
+- host: metalenz.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+- host: docs.metalenz.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+control_probe:
+  url: https://metalenz.com/.well-known/zzz-nonsense-probe
+  status: 404
+  finding: >-
+    Returns the site's real HTML 404 template, confirming the host does not answer 200 for
+    arbitrary /.well-known/ paths. The 404s above are therefore real absences.
+notes:
+- >-
+  metalenz.com serves its 404s as a full HTML page (about 92KB) with a 404 status code, which is
+  correct behaviour — not a soft 200.
+- >-
+  A Microsoft Entra ID OpenID Provider configuration IS reachable for the tenant behind
+  docs.metalenz.com, but it is served by login.microsoftonline.com, not by a Metalenz host, so it
+  is recorded in authentication/metalenz-authentication.yml rather than here.

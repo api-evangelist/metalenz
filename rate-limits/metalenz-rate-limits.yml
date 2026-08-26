@@ -1,0 +1,36 @@
+generated: '2026-08-25'
+method: probed
+source: https://metalenz.com/wp-json/wp/v2/posts
+limit_count: 0
+note: >-
+  Metalenz publishes no API documentation and therefore no rate limits. No RateLimit-*,
+  X-RateLimit-* or Retry-After response header was observed on any of the roughly sixty requests
+  made during this pass, and no 429 was returned. This is a recorded absence, not an unchecked
+  field: an agent consuming this surface gets no runtime throttling signal at all and must
+  self-throttle. Whatever protection exists is enforced silently at the Fastly/Pantheon edge with
+  no advertised contract — one route, POST /batch/v1, is already blocked there with a bare
+  plain-text 403, which is the only edge behaviour that surfaced.
+limits: []
+response_headers: []
+exhaustion_status: null
+evidence:
+- url: https://metalenz.com/wp-json/wp/v2/posts?per_page=2
+  http_status: 200
+  finding: >-
+    Headers returned: access-control-*, allow, cache-control, content-type, link, server,
+    strict-transport-security, x-content-type-options, x-pantheon-styx-hostname, x-robots-tag,
+    x-styx-req-id, x-wp-total, x-wp-totalpages, plus Fastly x-served-by / x-cache / x-timer / age.
+    No rate-limit header of any family.
+- url: https://metalenz.com/wp-json/
+  http_status: 200
+  finding: Root discovery document declares no rate-limit policy.
+- url: https://metalenz.com/wp-json/wp/v2/posts?per_page=999
+  http_status: 400
+  finding: >-
+    Bound enforcement exists on per_page (1..100) but it is a validation rule, not a rate limit; no
+    Retry-After accompanies it.
+- url: https://metalenz.com/wp-json/batch/v1
+  http_status: 403
+  finding: >-
+    'Request has been blocked.' — a plain-text edge denial, not a WordPress error and not a 429.
+    The only evidence that an edge policy exists at all.

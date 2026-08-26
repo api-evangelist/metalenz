@@ -1,0 +1,95 @@
+generated: '2026-08-25'
+method: searched
+source: >-
+  github.com/Metalenz, the Julia General registry (JuliaRegistries/General), npm, PyPI, RubyGems,
+  crates.io and the metalenz.com site search
+description: >-
+  Metalenz publishes no API client library, in any language, for any of its surfaces — there is no
+  developer program to build one against. It does publish three public repositories in its own
+  GitHub organization, github.com/Metalenz, and one of them is a registered Julia package. These
+  are internal scientific-computing tools from the metasurface inverse-design team, not SDKs.
+  Ownership is not inferred: both registered packages carry Metalenz corporate email addresses in
+  their Project.toml `authors` field (sam@metalenz.com, pawel@metalenz.com — Sam Buercklin,
+  research software engineer, and Pawel Latawiec, CTO). No `SDKs` pointer is emitted in apis.yml,
+  because none of these wraps an API and emitting one would credit Metalenz with a client library
+  it does not ship.
+sdk_count: 0
+package_count: 2
+packages:
+- language: julia
+  registry: julia-general
+  name: FlexibleFunctors
+  url: https://github.com/Metalenz/FlexibleFunctors.jl
+  registry_url: https://juliahub.com/ui/Packages/General/FlexibleFunctors
+  install: 'using Pkg; Pkg.add("FlexibleFunctors")'
+  official: true
+  is_api_client: false
+  version: 0.1.6
+  published: '2021-07-19'
+  description: >-
+    Converts struct fields to a flat vector representation and back, with a `parameters(x)` hook
+    that dynamically decides which fields are free and which are fixed. This is the shape an
+    inverse-design / gradient-optimization loop needs, and it is used with Zygote in the README —
+    consistent with metasurface inverse design, which is Metalenz's core numerical problem.
+  note: >-
+    Registered in the Julia General registry (F/FlexibleFunctors/Package.toml points at
+    github.com/Metalenz/FlexibleFunctors.jl); three versions registered, 0.1.4 through 0.1.6.
+    Latest tag v0.1.6 dates to 2021-07-19 — five years stale at capture, and the repository has
+    had no push since. Treat as unmaintained.
+- language: julia
+  registry: null
+  name: InfiltrateRRule
+  url: https://github.com/Metalenz/InfiltrateRRule.jl
+  registry_url: null
+  install: 'using Pkg; Pkg.add(url="https://github.com/Metalenz/InfiltrateRRule.jl")'
+  official: true
+  is_api_client: false
+  version: null
+  published: null
+  description: >-
+    Adds `@infiltrate` breakpoints to automatically derived ChainRules rrules — an autodiff
+    debugging aid.
+  note: >-
+    Checked and absent from the Julia General registry (I/InfiltrateRRule returns 404), so there is
+    no registry metadata endpoint to read a published version or date from. Project.toml declares
+    version 0.1.1 and the repository carries no git tags; last commit 2021-10-29. version/published
+    are null because there is nothing published to record, not because they were not checked.
+excluded:
+- name: Devices.jl
+  url: https://github.com/Metalenz/Devices.jl
+  reason: >-
+    A fork of platawiec/Devices.jl (itself from PainterQubits/Devices.jl) — CAD for superconducting
+    microwave devices. Not first-party work and not a Metalenz product; recorded here so the
+    omission reads as deliberate.
+registries_checked:
+- registry: npm
+  query: metalenz, "@metalenz/sdk"
+  result: 404 — no package
+- registry: pypi
+  query: metalenz
+  result: 404 — no package
+- registry: rubygems
+  query: metalenz
+  result: 404 — no package
+- registry: crates.io
+  query: metalenz
+  result: 404 — no package
+- registry: julia-general
+  query: FlexibleFunctors, InfiltrateRRule
+  result: FlexibleFunctors registered (0.1.6); InfiltrateRRule absent
+evidence:
+- url: https://api.github.com/orgs/Metalenz/repos
+  http_status: 200
+  finding: 3 public repositories; 2 first-party Julia packages, 1 fork.
+- url: https://raw.githubusercontent.com/Metalenz/FlexibleFunctors.jl/master/Project.toml
+  http_status: 200
+  finding: 'authors = ["Sam Buercklin <sam@metalenz.com>", "Pawel Latawiec <pawel@metalenz.com>"]; version = "0.1.6" — corporate-domain authorship confirms org ownership.'
+- url: https://raw.githubusercontent.com/JuliaRegistries/General/master/F/FlexibleFunctors/Package.toml
+  http_status: 200
+  finding: 'repo = "https://github.com/Metalenz/FlexibleFunctors.jl.git" — registered in the Julia General registry.'
+- url: https://raw.githubusercontent.com/JuliaRegistries/General/master/I/InfiltrateRRule/Package.toml
+  http_status: 404
+  finding: Not registered.
+- url: https://github.com/Metalenz/FlexibleFunctors.jl/tags.atom
+  http_status: 200
+  finding: 'Latest tag v0.1.6, 2021-07-19T16:43:17Z.'

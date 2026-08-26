@@ -1,0 +1,30 @@
+generated: '2026-08-25'
+method: searched
+source: https://metalenz.com/page-sitemap.xml + https://metalenz.com/all-products/ + https://metalenz.com/contact-us/
+plan_count: 0
+note: >-
+  Metalenz sells meta-optics components, licences and full-stack biometric solutions to device
+  makers and semiconductor foundries — design-in engagements with a sales cycle, not API access.
+  There is no pricing page, no plans page, no signup and no self-serve checkout anywhere on
+  metalenz.com: the page sitemap lists 28 pages and none of them is a pricing, plans, shop or
+  checkout page. Commercial engagement runs through the contact form, the "Request Product Brief"
+  form and sales@metalenz.com. The content API documented in this repo is incidental WordPress
+  infrastructure that is free and unmetered because nobody is selling it. plan_count is 0 as a
+  recorded fact, not an unchecked field.
+plans: []
+commercial_model: contact-for-quote (components, IP licensing and design-in)
+contact: https://metalenz.com/contact-us/
+sales_email: sales@metalenz.com
+evidence:
+- url: https://metalenz.com/page-sitemap.xml
+  http_status: 200
+  finding: 28 pages; no /pricing, /plans, /shop, /checkout or /signup entry.
+- url: https://metalenz.com/contact-us/
+  http_status: 200
+  finding: Gravity Forms enquiry form; the primary commercial entry point on the site.
+- url: https://metalenz.com/request-product-brief/
+  http_status: 200
+  finding: A gated product-brief request form — the closest thing to a datasheet, and it is a lead form.
+- url: https://metalenz.com/all-products/
+  http_status: 200
+  finding: Polar ID, Polar 3D, PolarEyes, Orion and Gemini product pages carry no prices.

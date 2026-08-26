@@ -1,0 +1,132 @@
+openapi: 3.1.0
+info:
+  title: Metalenz oEmbed API
+  version: wp/v2
+  description: Public oEmbed 1.0 provider endpoint for metalenz.com URLs, returning embeddable rich metadata — title,
+    author, provider, thumbnail and iframe HTML — for any published post or page on the site. The endpoint is advertised
+    in the `<head>` of every metalenz.com page as a discoverable oEmbed provider link, and answers anonymously in
+    both JSON and XML.
+  contact:
+    name: Metalenz
+    url: https://metalenz.com/contact-us/
+  x-derived-from: https://metalenz.com/wp-json/ route index + per-route HTTP OPTIONS schema documents
+  x-derived-on: '2026-08-25'
+  x-api-evangelist-note: Third-party profile. Metalenz is a fabless metasurface-optics (meta-optics) semiconductor
+    company and publishes no developer program, no developer portal and no API documentation; this documents the
+    anonymously readable WordPress REST content API behind metalenz.com. Every path, parameter, enum and property
+    here was read from the server's own published route index and OPTIONS schema documents on 2026-08-25 — nothing
+    is invented.
+servers:
+- url: https://metalenz.com/wp-json
+  description: Metalenz WordPress REST API
+tags:
+- name: oEmbed
+  description: oEmbed 1.0 rich-embed provider for metalenz.com URLs.
+paths:
+  /oembed/1.0/embed:
+    get:
+      operationId: getOembed
+      summary: Get oEmbed data for a URL
+      tags:
+      - oEmbed
+      description: Return the oEmbed 1.0 representation of a metalenz.com post or page URL.
+      parameters:
+      - name: format
+        in: query
+        schema:
+          default: json
+      - name: maxwidth
+        in: query
+        schema:
+          default: 600
+      - name: url
+        in: query
+        schema:
+          type: string
+          format: uri
+        description: The URL of the resource for which to fetch oEmbed data.
+      responses:
+        '200':
+          description: oEmbed 1.0 rich response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OEmbedResponse'
+            text/xml:
+              schema:
+                type: string
+                description: The same document serialised as XML when format=xml.
+        '404':
+          description: The URL does not belong to a published metalenz.com object — oembed_invalid_url.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Error:
+      type: object
+      description: The WordPress REST API error envelope returned on every 4xx/5xx.
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code, e.g. rest_post_invalid_id.
+        message:
+          type: string
+          description: Human-readable error message.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: The HTTP status code.
+            params:
+              type: object
+              description: Per-parameter validation messages (rest_invalid_param only).
+            details:
+              type: object
+              description: Per-parameter validation detail (rest_invalid_param only).
+      required:
+      - code
+      - message
+    OEmbedResponse:
+      type: object
+      description: oEmbed 1.0 rich-type response as emitted by the WordPress oEmbed provider.
+      properties:
+        version:
+          type: string
+          description: oEmbed version — "1.0".
+        provider_name:
+          type: string
+          description: '"Metalenz".'
+        provider_url:
+          type: string
+          format: uri
+          description: https://metalenz.com
+        author_name:
+          type: string
+          description: Display name of the object's author.
+        author_url:
+          type: string
+          format: uri
+          description: Author archive URL.
+        title:
+          type: string
+          description: Title of the embedded object.
+        type:
+          type: string
+          description: oEmbed type — "rich".
+        width:
+          type: integer
+        height:
+          type: integer
+        html:
+          type: string
+          description: The iframe markup that renders the embed.
+        thumbnail_url:
+          type: string
+          format: uri
+        thumbnail_width:
+          type: integer
+        thumbnail_height:
+          type: integer

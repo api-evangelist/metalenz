@@ -1,0 +1,167 @@
+generated: '2026-08-25'
+method: probed
+source: live responses from https://metalenz.com/wp-json/ captured 2026-08-25
+description: >-
+  Real, unedited request/response pairs captured anonymously from the metalenz.com WordPress REST
+  API. Every value below came off the wire; nothing is synthesised. Responses are trimmed with the
+  `_fields` parameter (which the API itself supports) so the examples stay readable — no field was
+  invented or renamed. Personal data is not reproduced: no example touches /wp/v2/users, and the
+  one author-name field the oEmbed response returns is replaced with a placeholder.
+pii_policy: >-
+  The users collection is a live endpoint on this surface and it returns real people. It is
+  documented structurally in the OpenAPI and in data-model/metalenz-data-model.yml, and it is
+  deliberately excluded from these examples, from skills/ and from mcp/. See the exclusion note in
+  skills/_index.yml.
+examples:
+- name: List the newest press release
+  operation: listPressReleases
+  spec: openapi/metalenz-press-releases-api-openapi.yml
+  request:
+    method: GET
+    url: https://metalenz.com/wp-json/wp/v2/posts?per_page=1&_fields=id,date,slug,link,title,excerpt,categories,tags,featured_media,author,type,status
+    headers: {}
+  response:
+    http_status: 200
+    headers:
+      x-wp-total: '26'
+      x-wp-totalpages: '26'
+      allow: GET
+    body:
+    - id: 3551
+      date: '2026-05-04T10:45:00'
+      slug: polar-id-kills-the-cutout-metalenz-launches-simple-secure-face-authentication-working-under-the-phone-display
+      status: publish
+      type: post
+      link: https://metalenz.com/polar-id-kills-the-cutout-metalenz-launches-simple-secure-face-authentication-working-under-the-phone-display/
+      title:
+        rendered: "Polar ID kills the cutout-  Metalenz launches simple, secure, face authentication working under the phone display"
+      excerpt:
+        rendered: "<p>Payment-grade biometric security, cost, and a true all-screen design are no longer a tradeoff. The Polar ID camera operates seamlessly beneath a fully powered-on OLED phone display. </p>\n"
+        protected: false
+      author: 2
+      featured_media: 3568
+      categories: [1]
+      tags: [29, 28]
+  note: >-
+    `title.rendered` and `excerpt.rendered` are HTML strings with entity escaping — the U+00A0 in
+    this title is real, and a consumer must decode entities before display.
+- name: Paginate the press-release archive
+  operation: listPressReleases
+  request:
+    method: GET
+    url: https://metalenz.com/wp-json/wp/v2/posts?per_page=2
+  response:
+    http_status: 200
+    headers:
+      x-wp-total: '26'
+      x-wp-totalpages: '13'
+      link: '<https://metalenz.com/wp-json/wp/v2/posts?per_page=2&page=2>; rel="next"'
+      cache-control: public, max-age=604800
+    body: '[…2 post objects…]'
+  note: Follow the RFC 8288 `Link` rel="next" rather than incrementing `page` blindly.
+- name: Cross-content search
+  operation: search
+  spec: openapi/metalenz-search-api-openapi.yml
+  request:
+    method: GET
+    url: https://metalenz.com/wp-json/wp/v2/search?search=polar+id&per_page=2&_fields=id,title,url,type,subtype
+  response:
+    http_status: 200
+    body:
+    - id: 3551
+      title: "Polar ID kills the cutout-  Metalenz launches simple, secure, face authentication working under the phone display"
+      url: https://metalenz.com/polar-id-kills-the-cutout-metalenz-launches-simple-secure-face-authentication-working-under-the-phone-display/
+      type: post
+      subtype: post
+    - id: 3439
+      title: Metalenz and UMC Bring Breakthrough Face Authentication Solution Polar ID to Mass Production
+      url: https://metalenz.com/metalenz-and-umc-bring-breakthrough-face-authentication-solution-polar-id-to-mass-production/
+      type: post
+      subtype: post
+  note: >-
+    Search is a substring LIKE match, not a ranked full-text engine — searching "SEMI" returns 26
+    results because it matches "semiconductor". Do not read a match count as a topical signal.
+- name: List the newsroom tags
+  operation: listTags
+  spec: openapi/metalenz-taxonomy-api-openapi.yml
+  request:
+    method: GET
+    url: https://metalenz.com/wp-json/wp/v2/tags?per_page=10&_fields=id,name,slug,count,link
+  response:
+    http_status: 200
+    headers:
+      x-wp-total: '2'
+    body:
+    - id: 29
+      count: 2
+      link: https://metalenz.com/tag/new-products/
+      name: New products
+      slug: new-products
+    - id: 28
+      count: 2
+      link: https://metalenz.com/tag/polar-3d/
+      name: Polar 3D
+      slug: polar-3d
+- name: oEmbed a product page
+  operation: getOembed
+  spec: openapi/metalenz-oembed-api-openapi.yml
+  request:
+    method: GET
+    url: https://metalenz.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fmetalenz.com%2Fpolareyes-polarization-imaging-system%2Fpolar-id%2F
+  response:
+    http_status: 200
+    body:
+      version: '1.0'
+      provider_name: Metalenz
+      provider_url: https://metalenz.com
+      author_name: <author display name — withheld, see pii_policy>
+      author_url: https://metalenz.com/author/<author slug>/
+      title: Polar ID
+      type: rich
+      width: 600
+      height: 338
+      html: '<blockquote class="wp-embedded-content" …><iframe sandbox="allow-scripts" src="https://metalenz.com/polareyes-polarization-imaging-system/polar-id/embed/#?secret=…" …></iframe>…</blockquote>'
+      thumbnail_url: https://metalenz.com/wp-content/uploads/2023/10/Polar-ID-Title-Screen-768x440.jpg
+      thumbnail_width: 600
+      thumbnail_height: 344
+  note: >-
+    The `html` field carries a full embed script and a per-request `secret`; it is truncated here
+    because it is 2KB of generated JavaScript, not because it was altered.
+- name: Read the route index
+  operation: getRouteIndex
+  spec: openapi/metalenz-discovery-api-openapi.yml
+  request:
+    method: GET
+    url: https://metalenz.com/wp-json/
+  response:
+    http_status: 200
+    body:
+      name: Metalenz
+      description: Metasurface Optics to Enable the Next Generation of Sensing
+      url: https://metalenz.com
+      home: https://metalenz.com
+      gmt_offset: 0
+      namespaces: [oembed/1.0, akismet/v1, leadin/v1, redirection/v1, rankmath/v1, webp-converter/v1,
+        gravityforms/v2, rankmath/v1/ca, rankmath/v1/an, rankmath/v1/in, 'wp/v2', wp-site-health/v1,
+        wp-block-editor/v1]
+      authentication:
+        application-passwords:
+          endpoints:
+            authorization: https://metalenz.com/wp-admin/authorize-application.php
+      routes: '{…212 route objects…}'
+      site_icon_url: https://metalenz.com/wp-content/uploads/2022/10/favicon.svg
+- name: An out-of-bounds parameter
+  operation: listPressReleases
+  request:
+    method: GET
+    url: https://metalenz.com/wp-json/wp/v2/posts?per_page=999
+  response:
+    http_status: 400
+    body:
+      code: rest_invalid_param
+      message: 'Invalid parameter(s): per_page'
+      data:
+        status: 400
+        params:
+          per_page: per_page must be between 1 (inclusive) and 100 (inclusive)
+  note: The canonical error shape for this API. See errors/metalenz-problem-types.yml.

@@ -1,0 +1,169 @@
+generated: '2026-08-25'
+method: derived
+source: openapi/*.yml + live responses from https://metalenz.com/wp-json/ + probes of metalenz.com and docs.metalenz.com
+description: >-
+  Standards conformance assertions for the WordPress REST content API behind metalenz.com. Metalenz
+  publishes no compliance claims, no trust center and no certification list, so every entry below is
+  derived from the contract and from observed responses. Entries with conforms:false are recorded
+  absences, not gaps in checking.
+standards:
+- id: openapi-3.1
+  conforms: true
+  evidence: >-
+    Seven OpenAPI 3.1.0 documents in openapi/ describing 23 operations, derived from the server's
+    own route index and OPTIONS JSON Schema documents. Note this is an API Evangelist artifact —
+    Metalenz does not publish an OpenAPI itself.
+  provenance: api-evangelist-derived
+- id: json-schema
+  conforms: true
+  evidence: >-
+    The server publishes a JSON Schema document per route via HTTP OPTIONS (draft-04 flavour, the
+    WordPress core dialect). Verified 200 with a `schema` key on all 11 wp/v2 routes probed plus
+    oembed/1.0/embed.
+  provenance: provider-published
+- id: rfc8288-web-linking
+  conforms: true
+  evidence: >-
+    Pagination uses an RFC 8288 Link header. Observed on GET /wp/v2/posts?per_page=2 —
+    '<https://metalenz.com/wp-json/wp/v2/posts?per_page=2&page=2>; rel="next"'.
+- id: hal-style-hypermedia
+  conforms: partial
+  evidence: >-
+    Every record carries a `_links` object with self/collection/about/author/wp:term relations, a
+    `curies` block and `targetHints.allow`. It is HAL-shaped rather than HAL-compliant (no
+    application/hal+json media type; the media type is application/json).
+- id: oembed-1.0
+  conforms: true
+  evidence: >-
+    GET /oembed/1.0/embed?url=https%3A%2F%2Fmetalenz.com%2F returned a 200 oEmbed 1.0 rich response
+    with version, provider_name "Metalenz", provider_url, title, html and thumbnail fields, and the
+    provider link is advertised in the head of every page. An unknown URL correctly returns 404
+    oembed_invalid_url.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: >-
+    Errors use the WordPress {code, message, data:{status}} envelope served as application/json,
+    not application/problem+json. Observed on 400, 401, 403 and 404 responses.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: 'GET https://metalenz.com/.well-known/security.txt returned 404 (real HTML 404, not a soft 200). Same on docs.metalenz.com.'
+- id: rfc8615-well-known
+  conforms: false
+  evidence: >-
+    All eight /.well-known/ paths probed on metalenz.com returned 404, and a control probe of a
+    nonsense /.well-known/ path also returned 404, so the host is not a catch-all. See
+    well-known/metalenz-well-known.yml.
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: No Sunset or Deprecation header appeared on any observed response.
+- id: oauth2
+  conforms: false
+  evidence: >-
+    No oauth2 securityScheme anywhere on the API surface. The only method the server declares is
+    WordPress application passwords (HTTP Basic). OAuth 2.0 IS used by Metalenz — but to gate the
+    human documentation portal at docs.metalenz.com, not the API; see the oidc entry.
+- id: oidc
+  conforms: partial
+  evidence: >-
+    docs.metalenz.com/documentation/ redirects into a Microsoft Entra ID OIDC authorize endpoint
+    (tenant 8dd6aaa4-ef1b-4a81-a14f-ef61ccec4361, response_type=id_token, scope=openid,
+    prompt=select_account) and the tenant's OpenID Provider metadata resolves 200. This is a
+    conformant OIDC deployment, but it protects a documentation portal for humans, not an API.
+    metalenz.com itself serves no /.well-known/openid-configuration (404).
+- id: idempotency
+  conforms: false
+  evidence: >-
+    No Idempotency-Key header or replay contract. Public operations are all GET, which is
+    idempotent by method semantics but is not an idempotency guarantee.
+- id: pagination
+  conforms: true
+  evidence: >-
+    page / per_page / offset with X-WP-Total and X-WP-TotalPages counters, plus RFC 8288 Link.
+    Verified live: X-WP-Total 26, X-WP-TotalPages 13 on the press-release collection.
+- id: cors
+  conforms: true
+  evidence: >-
+    Access-Control-Allow-Origin reflects the request Origin with Vary: Origin, and
+    Access-Control-Expose-Headers exposes the two pagination counters and Link.
+- id: asyncapi
+  conforms: false
+  evidence: >-
+    No event, streaming or webhook surface exists. /asyncapi.yaml and /asyncapi.json both 404, and
+    no webhook registration route appears among the 212 routes in the index. N/A rather than a
+    failure — this is a content API on a marketing site. No Webhooks or AsyncAPI pointer is emitted.
+- id: grpc-protobuf
+  conforms: false
+  evidence: >-
+    No .proto is published. github.com/Metalenz holds three public repositories — two first-party
+    Julia packages and one fork — and none contains a protocol definition.
+- id: wsdl-soap
+  conforms: false
+  evidence: >-
+    '?wsdl' and '?singleWsdl' on metalenz.com return the site HTML with the query parameter ignored
+    (200 text/html), not a SOAP contract.
+- id: schema-org-json-ld
+  conforms: true
+  evidence: >-
+    Pages carry Rank Math-generated schema.org JSON-LD in the document head (the rankmath/v1
+    namespace is registered on the REST API). The structured data is embedded in the HTML rather
+    than exposed through a REST route — Rank Math publishes no public equivalent of Yoast's
+    /yoast/v1/get_head endpoint, and every rankmath/v1 operation returned 401 anonymously.
+  provenance: provider-published
+domain_standards:
+  checked: true
+  found: false
+  detail: >-
+    Metalenz's markets are semiconductor meta-optics and smartphone face biometrics, and both have
+    real machine-facing standards worth probing: ISO/IEC 19794 and 39794 biometric data
+    interchange, ISO/IEC 30107 presentation-attack detection, FIDO Alliance biometric component
+    certification, the Android Biometric HAL / CDD class-3 thresholds, MIPI CSI-2 for the camera
+    interface, and the SEMI equipment-communication family for the foundry side. None is declared
+    anywhere on the public surface. A site-wide search across all 55 public posts and pages
+    returned zero results for FIDO, ISO/IEC, MIPI, "presentation attack", 30107, 19794 and OPC UA;
+    "biometric" matched 19 objects, but as marketing prose, and no standard is named in any of
+    them. No domain standard is asserted, and none is invented to fill the slot: this is
+    reward-only and an absence here is not a penalty.
+  candidates_considered:
+  - ISO/IEC 19794 / 39794 biometric data interchange formats
+  - ISO/IEC 30107 presentation attack detection
+  - FIDO Alliance biometric component certification
+  - Android Biometric HAL / CDD class-3
+  - MIPI CSI-2
+  - SEMI SECS/GEM E4/E5/E30
+  evidence:
+  - url: https://metalenz.com/wp-json/wp/v2/search?search=FIDO
+    http_status: 200
+    finding: X-WP-Total 0.
+  - url: https://metalenz.com/wp-json/wp/v2/search?search=ISO%2FIEC
+    http_status: 200
+    finding: X-WP-Total 0.
+  - url: https://metalenz.com/wp-json/wp/v2/search?search=MIPI
+    http_status: 200
+    finding: X-WP-Total 0.
+  - url: https://metalenz.com/wp-json/wp/v2/search?search=presentation%20attack
+    http_status: 200
+    finding: X-WP-Total 0.
+  - url: https://metalenz.com/wp-json/wp/v2/search?search=SEMI
+    http_status: 200
+    finding: >-
+      X-WP-Total 26 — but WordPress search is a substring LIKE match and every hit is the word
+      "semiconductor". Not a SEMI standards reference. Recorded so the number is not misread.
+certifications: []
+compliance_programs: []
+compliance_note: >-
+  No SOC 2, ISO 27001, PCI, HIPAA or FedRAMP claim appears anywhere on metalenz.com, and there is
+  no trust center. No Compliance pointer is emitted in apis.yml, because a pointer would assert a
+  published compliance program that does not exist. The site publishes Terms and Conditions of Sale
+  for hardware but does not publish a privacy policy — /privacy-policy/ returns 404 and no privacy
+  link appears in the footer of any page checked — so no PrivacyPolicy pointer is emitted either.
+evidence:
+- url: https://metalenz.com/wp-json/
+  http_status: 200
+- url: https://metalenz.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fmetalenz.com%2F
+  http_status: 200
+- url: https://metalenz.com/.well-known/security.txt
+  http_status: 404
+- url: https://metalenz.com/privacy-policy/
+  http_status: 404
+- url: https://login.microsoftonline.com/8dd6aaa4-ef1b-4a81-a14f-ef61ccec4361/v2.0/.well-known/openid-configuration
+  http_status: 200

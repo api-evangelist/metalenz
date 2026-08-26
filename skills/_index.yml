@@ -1,0 +1,32 @@
+generated: '2026-08-25'
+method: generated
+source: openapi/ (operationIds verified against the derived specs)
+note: >-
+  Metalenz publishes no AGENTS.md, no skills and no agent guidance — searched the site, the 28-entry
+  page sitemap, the 212-route index and the github.com/Metalenz organization on 2026-08-25. The two
+  skills below are API Evangelist-authored operating instructions grounded in real operationIds from
+  the specs in openapi/, which were themselves derived from the server's own published route index
+  and OPTIONS schemas. Both flows are read-only and anonymous.
+skills:
+- file: metalenz-track-polar-id-announcements.md
+  name: Track Metalenz Polar ID and meta-optics announcements
+  api: openapi/metalenz-press-releases-api-openapi.yml
+  operations: [search, listPressReleases, getPressRelease, listCategories, listTags, getTag, getMedia, getOembed]
+- file: metalenz-map-products-and-company.md
+  name: Map the Metalenz product line, technology and company facts
+  api: openapi/metalenz-pages-api-openapi.yml
+  operations: [getRouteIndex, listTypes, listPages, getPage, search, getMedia, getOembed]
+excluded_operations:
+- operationId: listAuthors
+  path: /wp/v2/users
+  reason: >-
+    Returns real WordPress accounts — display name, slug, description, avatar and author-archive
+    link — to any anonymous caller. Packaging a people endpoint as an agent skill turns a documented
+    exposure into working tooling, which is out of policy for this pipeline. The endpoint remains
+    documented structurally in openapi/metalenz-discovery-api-openapi.yml and in
+    data-model/metalenz-data-model.yml, and no example response containing a real person is stored
+    anywhere in this repository. The omission is deliberate, not an oversight.
+- operationId: getAuthor
+  path: /wp/v2/users/{id}
+  reason: >-
+    The per-person form of the same exposure, and the sharper one. Excluded for the same reason.

@@ -1,0 +1,125 @@
+# Metalenz
+
+> Metalenz is a fabless semiconductor optics company in Boston, Massachusetts that commercialises
+> meta-optics — flat metasurface lenses that replace stacks of curved refractive elements with a
+> single planar chip, patterned by nanostructures and mass produced in a standard semiconductor
+> foundry. Founded in 2016 by Rob Devlin and Federico Capasso out of the Capasso Lab at Harvard,
+> holding the exclusive worldwide licence to that lab's metasurface IP.
+
+**This file is not published by Metalenz.** metalenz.com/llms.txt returns 404. This is an API
+Evangelist-generated index of the company's public, machine-readable surface, built from artifacts
+in https://github.com/api-evangelist/metalenz on 2026-08-25.
+
+## What Metalenz sells
+
+Optical components, IP licences and full-stack biometric solutions — to device makers and
+semiconductor foundries, not to developers.
+
+- **PolarEyes** — the polarization imaging platform the products sit on
+- **Polar ID** — single-camera polarization face authentication for smartphones, working under a
+  fully powered-on OLED display; uses the Samsung ISOCELL Vizion 931 sensor and the Qualcomm
+  Snapdragon imaging stack
+- **Polar 3D** — on-device relightable selfies and avatars from a single image
+- **Orion** / **Gemini** — dot-pattern projectors for structured-light 3D sensing
+
+Manufacturing and licensing partners named publicly: STMicroelectronics, UMC.
+Investors named publicly: Neotribe Ventures, Intel Capital, TDK Ventures, 3M, Applied Ventures,
+M Ventures, Braemar Energy Ventures, Foothill Ventures.
+
+## There is no developer program
+
+- No developer portal. `developer.metalenz.com` does not resolve.
+- No API host. `api.metalenz.com` does not resolve.
+- No status page. `status.metalenz.com` does not resolve.
+- No SDK for any product, in any language, in any registry.
+- No OpenAPI, AsyncAPI, GraphQL schema, `.proto` or WSDL published anywhere.
+- No `/.well-known/` documents at all — eight paths probed, all 404, control probe confirms the
+  host is not a catch-all.
+- No MCP server, no A2A agent card, no webhooks, no events.
+- Product documentation exists at **https://docs.metalenz.com/** but it is gated: the
+  `/documentation/` path redirects into Microsoft Entra ID and is reachable only by customers,
+  licensees and foundry partners.
+
+## What IS machine-readable
+
+The marketing site runs WordPress 6.8.2 with its REST API open, so the company's own content is
+available as JSON, anonymously and read-only. Base URL: `https://metalenz.com/wp-json`
+
+- [Press Releases API](https://metalenz.com/wp-json/wp/v2/posts): 26 published items back to the
+  February 2021 launch out of stealth. The WordPress `post` type is labelled "Press Releases" here.
+- [Pages API](https://metalenz.com/wp-json/wp/v2/pages): 29 pages — product, technology, market,
+  company and legal. Pages nest; PolarEyes is the parent of Polar ID and Polar 3D.
+- [Media API](https://metalenz.com/wp-json/wp/v2/media): 418 attachments — product imagery,
+  metasurface diagrams, event photography, brand and sub-brand logos.
+- [Taxonomy API](https://metalenz.com/wp-json/wp/v2/tags): 1 category, 2 tags. Thin and unmaintained.
+- [Search API](https://metalenz.com/wp-json/wp/v2/search): cross-content search. Substring `LIKE`
+  match, not ranked full text — searching "SEMI" returns 26 hits because they contain
+  "semiconductor".
+- [Discovery API](https://metalenz.com/wp-json/): the route index — 212 routes across 13
+  namespaces — plus content types, taxonomies and statuses.
+- [oEmbed API](https://metalenz.com/wp-json/oembed/1.0/embed): oEmbed 1.0 rich cards for any
+  metalenz.com URL, JSON or XML.
+
+## How to consume it
+
+- Anonymous. No key, no token, no account. `Allow: GET`.
+- `per_page` is 1..100; out of bounds returns `400 rest_invalid_param` with the exact bound.
+- Page by the RFC 8288 `Link: rel="next"` header. `X-WP-Total` / `X-WP-TotalPages` give counts.
+- Send `_fields=` to trim responses; a full page record is ~22KB.
+- Add `_embed` to inline author, featured media and terms in one round trip.
+- Errors are the WordPress envelope `{code, message, data:{status}}` as `application/json` — **not**
+  RFC 9457 problem+json.
+- **401 means stop, not authenticate.** There is no public credential path; the only method the
+  server declares is WordPress application passwords, issued from the site admin.
+- `POST /batch/v1` is blocked at the Fastly/Pantheon edge with a plain-text `403 Request has been
+  blocked.` — handle a non-JSON 4xx body.
+- No rate-limit headers of any family, no `Retry-After`, no 429 observed. Self-throttle.
+- Responses are `cache-control: public, max-age=604800` behind Fastly. Treat as an archive, not a
+  feed.
+- **`/wp/v2/users` returns real people.** It answers anonymously. It is documented structurally in
+  this profile and deliberately excluded from every skill and tool here. Do not enumerate it.
+
+## Open source
+
+github.com/Metalenz holds three public repositories — none of them an API client. Two are
+first-party Julia packages from the metasurface inverse-design team (`FlexibleFunctors.jl`,
+registered in the Julia General registry at 0.1.6, last tagged 2021-07-19; `InfiltrateRRule.jl`,
+unregistered) and one is a fork. Ownership is confirmed by corporate-domain authorship in their
+`Project.toml` files.
+
+## Profile artifacts
+
+- OpenAPI (7 documents, 23 operations): `openapi/`
+- Authentication: `authentication/metalenz-authentication.yml`
+- Errors: `errors/metalenz-problem-types.yml`
+- Conventions and reversibility: `conventions/metalenz-conventions.yml`
+- Data model: `data-model/metalenz-data-model.yml`
+- Conformance: `conformance/metalenz-conformance.yml`
+- Lifecycle: `lifecycle/metalenz-lifecycle.yml`
+- Rate limits: `rate-limits/metalenz-rate-limits.yml`
+- Plans and pricing: `plans/metalenz-plans-pricing.yml`
+- Packages: `packages/metalenz-packages.yml`
+- Well-known probe: `well-known/metalenz-well-known.yml`
+- Candidate MCP tools and crosswalk: `mcp/`
+- Agent skills: `skills/`
+- Examples: `examples/metalenz-examples.yml`
+
+## Company links
+
+- Website: https://metalenz.com/
+- About: https://metalenz.com/about-us/
+- Products: https://metalenz.com/all-products/
+- Technology: https://metalenz.com/our-technology/
+- What are meta-optics: https://metalenz.com/what-are-meta-optics/
+- Press releases: https://metalenz.com/press-releases/
+- Media coverage: https://metalenz.com/media-coverage/
+- Events: https://metalenz.com/events/
+- Careers: https://metalenz.com/careers/
+- Contact: https://metalenz.com/contact-us/ — sales@metalenz.com
+- Terms and Conditions of Sale: https://metalenz.com/terms-and-conditions-of-sale/
+- RSS: https://metalenz.com/feed/
+- GitHub: https://github.com/Metalenz
+- LinkedIn: https://www.linkedin.com/company/metalenz/
+
+There is no pricing page, no plans page and no signup anywhere on metalenz.com. Commercial
+engagement is contact-for-quote.

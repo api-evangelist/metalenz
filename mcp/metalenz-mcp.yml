@@ -1,0 +1,158 @@
+generated: '2026-08-25'
+method: derived
+status: candidate
+source: openapi/ (23 operations across 7 derived specs)
+description: Metalenz operates no MCP server. Searched the company site, the 212-route index, mcp.metalenz.com (no
+  DNS record), https://metalenz.com/mcp (404), /.well-known/mcp.json (404), /sse (404), the npm registry (a text
+  search for "metalenz" returns 0 packages) and the github.com/Metalenz organization on 2026-08-25 and found none.
+  The tool list below is a CANDIDATE derived from the OpenAPI operations this repo harvested — it is what an MCP
+  server over this surface would expose, not something Metalenz publishes. Every tool is read-only because the whole
+  anonymous surface is read-only.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: none
+  verified: derived
+  note: 'No remote endpoint and no stdio package exist. mode: none is a recorded absence — nothing here should be
+    read as an agent surface Metalenz ships. An endpoint URL is deliberately NOT guessed.'
+server:
+  name: metalenz
+  transport: http
+  url: null
+  published: false
+auth:
+  required: false
+  note: All listed tools would work anonymously over plain HTTPS.
+tool_count: 21
+tools:
+- name: list_press_releases
+  description: List Metalenz press releases and product announcements
+  category: content
+  source_operation: openapi/metalenz-press-releases-api-openapi.yml#listPressReleases
+  read_only: true
+- name: get_press_release
+  description: Retrieve a single Metalenz press release by id
+  category: content
+  source_operation: openapi/metalenz-press-releases-api-openapi.yml#getPressRelease
+  read_only: true
+- name: list_pages
+  description: List the product, technology, market and company pages on metalenz.com
+  category: content
+  source_operation: openapi/metalenz-pages-api-openapi.yml#listPages
+  read_only: true
+- name: get_page
+  description: Retrieve a single page by id, including its full rendered content
+  category: content
+  source_operation: openapi/metalenz-pages-api-openapi.yml#getPage
+  read_only: true
+- name: list_media
+  description: List media library attachments — product imagery, diagrams and press assets
+  category: media
+  source_operation: openapi/metalenz-media-api-openapi.yml#listMedia
+  read_only: true
+- name: get_media
+  description: Retrieve a single media attachment by id with its size variants
+  category: media
+  source_operation: openapi/metalenz-media-api-openapi.yml#getMedia
+  read_only: true
+- name: list_categories
+  description: List newsroom categories with post counts
+  category: taxonomy
+  source_operation: openapi/metalenz-taxonomy-api-openapi.yml#listCategories
+  read_only: true
+- name: get_category
+  description: Retrieve a category term by id
+  category: taxonomy
+  source_operation: openapi/metalenz-taxonomy-api-openapi.yml#getCategory
+  read_only: true
+- name: list_tags
+  description: List newsroom tags with post counts
+  category: taxonomy
+  source_operation: openapi/metalenz-taxonomy-api-openapi.yml#listTags
+  read_only: true
+- name: get_tag
+  description: Retrieve a tag term by id
+  category: taxonomy
+  source_operation: openapi/metalenz-taxonomy-api-openapi.yml#getTag
+  read_only: true
+- name: search_site
+  description: Search press releases and pages together and get resolvable result stubs
+  category: search
+  source_operation: openapi/metalenz-search-api-openapi.yml#search
+  read_only: true
+- name: get_route_index
+  description: Read the self-describing REST route index for metalenz.com
+  category: discovery
+  source_operation: openapi/metalenz-discovery-api-openapi.yml#getRouteIndex
+  read_only: true
+- name: get_namespace_index
+  description: Read the route index for one registered namespace
+  category: discovery
+  source_operation: openapi/metalenz-discovery-api-openapi.yml#getNamespaceIndex
+  read_only: true
+- name: list_content_types
+  description: List the registered post types visible in the REST API
+  category: discovery
+  source_operation: openapi/metalenz-discovery-api-openapi.yml#listTypes
+  read_only: true
+- name: get_content_type
+  description: Retrieve the registration record for one post type
+  category: discovery
+  source_operation: openapi/metalenz-discovery-api-openapi.yml#getType
+  read_only: true
+- name: list_taxonomies
+  description: List the registered taxonomies
+  category: discovery
+  source_operation: openapi/metalenz-discovery-api-openapi.yml#listTaxonomies
+  read_only: true
+- name: get_taxonomy
+  description: Retrieve the registration record for one taxonomy
+  category: discovery
+  source_operation: openapi/metalenz-discovery-api-openapi.yml#getTaxonomy
+  read_only: true
+- name: list_statuses
+  description: List the publication statuses exposed anonymously
+  category: discovery
+  source_operation: openapi/metalenz-discovery-api-openapi.yml#listStatuses
+  read_only: true
+- name: get_status
+  description: Retrieve one publication status record
+  category: discovery
+  source_operation: openapi/metalenz-discovery-api-openapi.yml#getStatus
+  read_only: true
+- name: list_comments
+  description: List approved comments (zero on this site)
+  category: discovery
+  source_operation: openapi/metalenz-discovery-api-openapi.yml#listComments
+  read_only: true
+- name: get_oembed
+  description: Get the oEmbed 1.0 rich representation of a metalenz.com URL
+  category: embed
+  source_operation: openapi/metalenz-oembed-api-openapi.yml#getOembed
+  read_only: true
+excluded_operations:
+- operationId: listAuthors
+  path: /wp/v2/users
+  source_operation: openapi/metalenz-discovery-api-openapi.yml#listAuthors
+  reason: Returns real WordPress accounts — personal data. Packaging a people endpoint as an agent tool is out of
+    policy for this pipeline; the endpoint is still documented structurally in the OpenAPI and in data-model/.
+- operationId: getAuthor
+  path: /wp/v2/users/{id}
+  source_operation: openapi/metalenz-discovery-api-openapi.yml#getAuthor
+  reason: Same as listAuthors — a per-person lookup is the sharper form of the same exposure and is deliberately
+    not packaged.
+exclusion_policy: Operations that return records about identifiable people are not packaged as agent tools, even
+  when they answer anonymously. The exclusion is recorded rather than silent so a reader can tell the difference
+  between an operation that was missed and one that was deliberately left out.
+evidence:
+- url: https://metalenz.com/mcp
+  http_status: 404
+- url: https://metalenz.com/.well-known/mcp.json
+  http_status: 404
+- host: mcp.metalenz.com
+  dns: no record
+- url: https://registry.npmjs.org/-/v1/search?text=metalenz
+  http_status: 200
+  finding: total 0

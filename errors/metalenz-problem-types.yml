@@ -1,0 +1,137 @@
+generated: '2026-08-25'
+method: probed
+source: live 4xx responses from https://metalenz.com/wp-json/ + openapi/ derived responses
+format: wp-rest-error
+rfc9457: false
+description: >-
+  Metalenz publishes no error reference. This catalog is built from error envelopes observed live
+  against metalenz.com/wp-json on 2026-08-25, plus the 4xx responses declared in the seven derived
+  OpenAPI documents. The API does NOT use RFC 9457 problem+json; it uses the WordPress REST error
+  envelope, served as application/json.
+envelope:
+  content_type: application/json
+  fields:
+    code: Machine-readable error slug, e.g. rest_post_invalid_id. This is the stable identifier — match on it, not on `message`.
+    message: Human-readable, localized message. Not stable; do not parse.
+    data.status: The HTTP status code, repeated in the body.
+    data.params: Present only on rest_invalid_param — a map of parameter name to validation message.
+    data.details: Present only on rest_invalid_param — per-parameter code/message/data detail objects.
+  example: '{"code":"rest_post_invalid_id","message":"Invalid post ID.","data":{"status":404}}'
+problems:
+- status: 400
+  code: rest_invalid_param
+  title: Invalid parameter(s)
+  detail: >-
+    One or more query parameters failed validation. data.params names each offending parameter and
+    the constraint it violated; data.details repeats it with a nested code such as
+    rest_out_of_bounds.
+  remediation: Read data.params for the exact bound. The most common cause is per_page outside 1..100.
+  observed:
+    url: https://metalenz.com/wp-json/wp/v2/posts?per_page=999
+    http_status: 400
+    body: '{"code":"rest_invalid_param","message":"Invalid parameter(s): per_page","data":{"status":400,"params":{"per_page":"per_page must be between 1 (inclusive) and 100 (inclusive)"},"details":{"per_page":{"code":"rest_out_of_bounds","message":"per_page must be between 1 (inclusive) and 100 (inclusive)","data":null}}}}'
+  applies_to: every list operation
+- status: 401
+  code: rest_forbidden
+  title: Not allowed
+  detail: >-
+    The operation requires authentication or a capability the anonymous caller does not have.
+    Returned as 401 even where 403 would be more precise.
+  remediation: >-
+    This surface has no public credential path. Privileged reads and all writes require a
+    WordPress application password issued to a site user; treat these operations as unavailable.
+  observed:
+    url: https://metalenz.com/wp-json/wp/v2/settings
+    http_status: 401
+    body: '{"code":"rest_forbidden","message":"Sorry, you are not allowed to do that.","data":{"status":401}}'
+  applies_to: GET /wp/v2/settings, /wp/v2/themes, /wp/v2/plugins, /wp/v2/menus and every write method
+- status: 401
+  code: rest_cannot_view
+  title: Cannot view
+  detail: >-
+    Capability-specific variants of the same condition, emitted by individual controllers —
+    rest_cannot_view, rest_cannot_view_themes, rest_cannot_manage_widgets,
+    rest_cannot_manage_templates, rest_cannot_read_global_styles, rest_block_directory_cannot_view,
+    rest_pattern_directory_cannot_view, rest_cannot_view_url_details, webpc_rest_token_not_found.
+  remediation: Treat every one of these as "not part of the public surface"; the code varies, the outcome does not.
+  observed:
+    url: https://metalenz.com/wp-json/wp/v2/menus
+    http_status: 401
+    body: '{"code":"rest_cannot_view","message":"Sorry, you are not allowed to view menus.","data":{"status":401}}'
+  applies_to: administrative wp/v2 and plugin-namespace routes
+- status: 403
+  code: waf-block
+  title: Blocked by the edge
+  detail: >-
+    The Pantheon/Fastly edge in front of metalenz.com returns a bare `Request has been blocked.`
+    body — plain text, not the WordPress JSON envelope — for some routes. Observed on the core
+    batch endpoint, which never reached WordPress at all.
+  remediation: >-
+    Do not parse this as a WordPress error; there is no `code` field. It signals an edge rule, not
+    an application decision, and it is not retryable by changing credentials.
+  observed:
+    url: https://metalenz.com/wp-json/batch/v1
+    http_status: 403
+    body: 'Request has been blocked.'
+  applies_to: POST /batch/v1
+- status: 404
+  code: rest_no_route
+  title: No route matched
+  detail: No route was found matching the URL and request method.
+  remediation: >-
+    Verify the path against the live route index at GET /wp-json/ (212 routes at capture). Note
+    that a route may exist for a different method than the one used.
+  observed:
+    url: https://metalenz.com/wp-json/wp/v2/nope
+    http_status: 404
+    body: '{"code":"rest_no_route","message":"No route was found matching the URL and request method.","data":{"status":404}}'
+  applies_to: any unregistered path
+- status: 404
+  code: rest_post_invalid_id
+  title: Invalid post ID
+  detail: >-
+    The numeric id in the path does not resolve to a readable object of the requested type. Also
+    returned when the object exists but is not published, so 404 does not prove non-existence.
+  remediation: List the collection first and use an id from the response rather than guessing.
+  observed:
+    url: https://metalenz.com/wp-json/wp/v2/posts/99999999
+    http_status: 404
+    body: '{"code":"rest_post_invalid_id","message":"Invalid post ID.","data":{"status":404}}'
+  applies_to: getPressRelease, getPage, getMedia
+  source_operations:
+  - openapi/metalenz-press-releases-api-openapi.yml#getPressRelease
+  - openapi/metalenz-pages-api-openapi.yml#getPage
+  - openapi/metalenz-media-api-openapi.yml#getMedia
+- status: 404
+  code: rest_term_invalid
+  title: Invalid term ID
+  detail: The numeric id in the path does not resolve to a term in the requested taxonomy.
+  remediation: List the taxonomy first and use an id from the response.
+  observed:
+    url: https://metalenz.com/wp-json/wp/v2/categories/99999999
+    http_status: 404
+    body: '{"code":"rest_term_invalid","message":"Term does not exist.","data":{"status":404}}'
+  applies_to: getCategory, getTag
+  source_operations:
+  - openapi/metalenz-taxonomy-api-openapi.yml#getCategory
+  - openapi/metalenz-taxonomy-api-openapi.yml#getTag
+- status: 404
+  code: oembed_invalid_url
+  title: Invalid oEmbed URL
+  detail: The url parameter does not resolve to a published post or page on metalenz.com.
+  remediation: Pass a fully-qualified metalenz.com permalink taken from a posts or pages response.
+  observed:
+    url: https://metalenz.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fexample.com%2F
+    http_status: 404
+    body: '{"code":"oembed_invalid_url","message":"Not Found","data":{"status":404}}'
+  applies_to: getOembed
+  source_operations:
+  - openapi/metalenz-oembed-api-openapi.yml#getOembed
+gaps:
+- >-
+  No published error reference exists. Codes here are the WordPress core set observed or declared;
+  a provider-authored catalog would be authoritative and this one is not.
+- >-
+  The API returns 401 where 403 is semantically correct for an authenticated-but-unauthorized
+  caller, and the edge returns a non-JSON 403 for a blocked route. An agent should not treat 401 as
+  "retry with credentials" on this surface, and must handle a 403 whose body is not JSON at all.

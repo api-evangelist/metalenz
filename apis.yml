@@ -1,18 +1,252 @@
 aid: metalenz
 name: Metalenz
-description: 'Metalenz is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  Metalenz is a fabless semiconductor optics company in Boston, Massachusetts that commercialises
+  meta-optics — flat metasurface lenses that replace stacks of curved refractive elements with a
+  single planar chip patterned by nanostructures and mass produced in a standard semiconductor
+  foundry. The company was founded in 2016 by CEO Rob Devlin and Harvard professor Federico Capasso
+  out of the Capasso Lab at the Harvard John A. Paulson School of Engineering and Applied Sciences,
+  and holds the exclusive worldwide licence to that lab's metasurface intellectual property, now
+  more than 150 issued and pending patents. Its first-generation metasurfaces reached mass
+  production in 2022 through a manufacturing partnership with STMicroelectronics and have since
+  shipped in well over 100 million consumer devices. The current product line is built on the
+  PolarEyes polarization imaging platform: Polar ID, a single-camera polarization face
+  authentication system for smartphones that works under the display and uses the Samsung ISOCELL
+  Vizion 931 sensor and Qualcomm Snapdragon imaging stack; Polar 3D, on-device relightable selfies
+  and avatars from one image; and the Orion and Gemini dot-pattern projectors for structured-light
+  3D sensing. Metalenz sells optical components, licences and full-stack biometric solutions to
+  device makers and foundries — UMC and STMicroelectronics are named manufacturing partners — and
+  is backed by Neotribe Ventures, Intel Capital, TDK Ventures, 3M, Applied Ventures, M Ventures,
+  Braemar Energy Ventures and Foothill Ventures. It sells silicon and IP, not software: it
+  publishes no developer program, no developer portal, no SDK and no API documentation of any kind.
+  The only machine-readable interface it exposes to the public is the WordPress REST content API
+  behind metalenz.com, which is anonymously readable, read-only without credentials, and captured
+  here for discovery purposes.
 url: https://raw.githubusercontent.com/api-evangelist/metalenz/refs/heads/main/apis.yml
+image: https://metalenz.com/wp-content/uploads/2023/07/metalenz-logo.png
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-08-25'
 modified: '2026-08-25'
 tags:
 - Company
-apis: []
+- Semiconductors
+- Optics
+- Meta-Optics
+- Metasurface
+- Photonics
+- Biometrics
+- Face Authentication
+- Polarization Imaging
+- 3D Sensing
+- Computer Vision
+- Consumer Electronics
+- Automotive
+- Robotics
+- Hardware
+- Content
+apis:
+- aid: metalenz:metalenz-press-releases-api
+  name: Metalenz Press Releases API
+  description: >-
+    Public, unauthenticated read access to the Metalenz newsroom via the WordPress core REST API.
+    The `post` content type on metalenz.com is registered with the label "Press Releases" and
+    carries the company's press releases, product launches, funding announcements and award
+    notices back to the February 2021 launch out of stealth. Verified live at 26 published items.
+  humanURL: https://metalenz.com/press-releases/
+  baseURL: https://metalenz.com/wp-json
+  tags:
+  - Press Releases
+  - Newsroom
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/metalenz-press-releases-api-openapi.yml
+  - type: Overlay
+    url: overlays/metalenz-press-releases-api-overlay.yaml
+  - type: Authentication
+    url: authentication/metalenz-authentication.yml
+  - type: ErrorCatalog
+    url: errors/metalenz-problem-types.yml
+  - type: Conventions
+    url: conventions/metalenz-conventions.yml
+  - type: DataModel
+    url: data-model/metalenz-data-model.yml
+  - type: Conformance
+    url: conformance/metalenz-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/metalenz-lifecycle.yml
+- aid: metalenz:metalenz-pages-api
+  name: Metalenz Pages API
+  description: >-
+    Public, unauthenticated read access to the static page tree behind metalenz.com — the Polar ID,
+    Polar 3D, PolarEyes, Orion and Gemini product pages, the meta-optics and foundational technology
+    explainers, the consumer-electronics, automotive and robotics market pages, About Us,
+    Leadership, Careers, Events, Video Gallery and the Terms and Conditions of Sale. Verified live
+    at 29 published pages.
+  humanURL: https://metalenz.com/
+  baseURL: https://metalenz.com/wp-json
+  tags:
+  - Pages
+  - Content
+  - Products
+  properties:
+  - type: OpenAPI
+    url: openapi/metalenz-pages-api-openapi.yml
+  - type: Overlay
+    url: overlays/metalenz-pages-api-overlay.yaml
+  - type: Authentication
+    url: authentication/metalenz-authentication.yml
+  - type: ErrorCatalog
+    url: errors/metalenz-problem-types.yml
+  - type: Conventions
+    url: conventions/metalenz-conventions.yml
+  - type: DataModel
+    url: data-model/metalenz-data-model.yml
+  - type: Conformance
+    url: conformance/metalenz-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/metalenz-lifecycle.yml
+- aid: metalenz:metalenz-media-api
+  name: Metalenz Media API
+  description: >-
+    Public, unauthenticated read access to the media library behind metalenz.com — Polar ID and
+    Polar 3D product imagery, metasurface and meta-optics diagrams, conference and event
+    photography, leadership headshots, brand and sub-brand logos and press assets, each with its
+    generated size variants. Verified live at 418 attachments.
+  humanURL: https://metalenz.com/media-coverage/
+  baseURL: https://metalenz.com/wp-json
+  tags:
+  - Media
+  - Press Assets
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/metalenz-media-api-openapi.yml
+  - type: Overlay
+    url: overlays/metalenz-media-api-overlay.yaml
+  - type: Authentication
+    url: authentication/metalenz-authentication.yml
+  - type: ErrorCatalog
+    url: errors/metalenz-problem-types.yml
+  - type: Conventions
+    url: conventions/metalenz-conventions.yml
+  - type: DataModel
+    url: data-model/metalenz-data-model.yml
+  - type: Conformance
+    url: conformance/metalenz-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/metalenz-lifecycle.yml
+- aid: metalenz:metalenz-taxonomy-api
+  name: Metalenz Taxonomy API
+  description: >-
+    Public, unauthenticated read access to the classification layer over the Metalenz newsroom —
+    the `category` taxonomy and the `post_tag` taxonomy, with their term records, counts and
+    archive links. Verified live at 1 category and 2 tags (`polar-3d`, `new-products`).
+  humanURL: https://metalenz.com/press-releases/
+  baseURL: https://metalenz.com/wp-json
+  tags:
+  - Taxonomy
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/metalenz-taxonomy-api-openapi.yml
+  - type: Overlay
+    url: overlays/metalenz-taxonomy-api-overlay.yaml
+  - type: Authentication
+    url: authentication/metalenz-authentication.yml
+  - type: ErrorCatalog
+    url: errors/metalenz-problem-types.yml
+  - type: Conventions
+    url: conventions/metalenz-conventions.yml
+  - type: DataModel
+    url: data-model/metalenz-data-model.yml
+  - type: Conformance
+    url: conformance/metalenz-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/metalenz-lifecycle.yml
+- aid: metalenz:metalenz-search-api
+  name: Metalenz Search API
+  description: >-
+    Public, unauthenticated cross-content search over metalenz.com — press releases and static
+    pages together — returning lightweight id / title / url / type / subtype records that link back
+    to the full object. Verified live returning 34 matching objects for the capture probe term.
+  humanURL: https://metalenz.com/
+  baseURL: https://metalenz.com/wp-json
+  tags:
+  - Search
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/metalenz-search-api-openapi.yml
+  - type: Overlay
+    url: overlays/metalenz-search-api-overlay.yaml
+  - type: Authentication
+    url: authentication/metalenz-authentication.yml
+  - type: ErrorCatalog
+    url: errors/metalenz-problem-types.yml
+  - type: Conventions
+    url: conventions/metalenz-conventions.yml
+  - type: Conformance
+    url: conformance/metalenz-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/metalenz-lifecycle.yml
+- aid: metalenz:metalenz-discovery-api
+  name: Metalenz Discovery API
+  description: >-
+    The self-describing surface of the metalenz.com WordPress REST API — the route index, the
+    per-namespace indexes, the registered content types and taxonomies, the publication statuses,
+    the public author records and the comment surface. This is what makes the rest of the API
+    machine-readable in the absence of any published documentation. Verified live at 212 routes
+    across 13 namespaces.
+  humanURL: https://metalenz.com/wp-json/
+  baseURL: https://metalenz.com/wp-json
+  tags:
+  - Discovery
+  - Metadata
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/metalenz-discovery-api-openapi.yml
+  - type: Overlay
+    url: overlays/metalenz-discovery-api-overlay.yaml
+  - type: Authentication
+    url: authentication/metalenz-authentication.yml
+  - type: ErrorCatalog
+    url: errors/metalenz-problem-types.yml
+  - type: Conventions
+    url: conventions/metalenz-conventions.yml
+  - type: Conformance
+    url: conformance/metalenz-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/metalenz-lifecycle.yml
+- aid: metalenz:metalenz-oembed-api
+  name: Metalenz oEmbed API
+  description: >-
+    Public oEmbed 1.0 provider endpoint for metalenz.com URLs, returning embeddable rich metadata —
+    title, author, provider, thumbnail and iframe HTML — for any published post or page. The
+    endpoint is advertised as a discoverable oEmbed provider link in the head of every metalenz.com
+    page and answers anonymously in both JSON and XML.
+  humanURL: https://metalenz.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fmetalenz.com%2F
+  baseURL: https://metalenz.com/wp-json
+  tags:
+  - oEmbed
+  - Embeds
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/metalenz-oembed-api-openapi.yml
+  - type: Overlay
+    url: overlays/metalenz-oembed-api-overlay.yaml
+  - type: Authentication
+    url: authentication/metalenz-authentication.yml
+  - type: ErrorCatalog
+    url: errors/metalenz-problem-types.yml
+  - type: Conventions
+    url: conventions/metalenz-conventions.yml
+  - type: Conformance
+    url: conformance/metalenz-conformance.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -20,4 +254,73 @@ maintainers:
   email: info@apis.io
 common:
 - type: Website
-  url: https://www.nasdaqprivatemarket.com/
+  url: https://metalenz.com/
+- type: About
+  url: https://metalenz.com/about-us/
+- type: Leadership
+  url: https://metalenz.com/leadership/
+- type: Products
+  url: https://metalenz.com/all-products/
+- type: Technology
+  url: https://metalenz.com/our-technology/
+- type: Press
+  url: https://metalenz.com/press-releases/
+- type: News
+  url: https://metalenz.com/media-coverage/
+- type: Events
+  url: https://metalenz.com/events/
+- type: Videos
+  url: https://metalenz.com/video-gallery/
+- type: BlogRSS
+  url: https://metalenz.com/feed/
+- type: Support
+  url: https://metalenz.com/contact-us/
+- type: Contact
+  url: https://metalenz.com/contact-us/
+- type: Careers
+  url: https://metalenz.com/careers/
+- type: SiteMap
+  url: https://metalenz.com/sitemap_index.xml
+- type: DocumentationPortal
+  url: https://docs.metalenz.com/
+- type: TermsOfService
+  url: https://metalenz.com/terms-and-conditions-of-sale/
+- type: GitHubOrganization
+  url: https://github.com/Metalenz
+- type: LinkedIn
+  url: https://www.linkedin.com/company/metalenz/
+- type: Authentication
+  url: authentication/metalenz-authentication.yml
+- type: ErrorCatalog
+  url: errors/metalenz-problem-types.yml
+- type: Conventions
+  url: conventions/metalenz-conventions.yml
+- type: DataModel
+  url: data-model/metalenz-data-model.yml
+- type: Conformance
+  url: conformance/metalenz-conformance.yml
+- type: Lifecycle
+  url: lifecycle/metalenz-lifecycle.yml
+- type: RateLimits
+  url: rate-limits/metalenz-rate-limits.yml
+- type: Plans
+  url: plans/metalenz-plans-pricing.yml
+- type: Examples
+  url: examples/metalenz-examples.yml
+- type: LLMsTxt
+  url: llms/metalenz-llms.txt
+- type: AgentSkill
+  url: skills/_index.yml
+- type: AgenticAccess
+  url: agentic-access/metalenz-agentic-access.yml
+- type: ToolCrosswalk
+  url: mcp/metalenz-tool-crosswalk.yml
+- type: Packages
+  url: packages/metalenz-packages.yml
+- type: DomainSecurity
+  url: security/metalenz-domain-security.yml
+x-enrichment:
+  date: '2026-08-25'
+  status: enriched
+  artifacts_added: 33
+  pass: local-v1

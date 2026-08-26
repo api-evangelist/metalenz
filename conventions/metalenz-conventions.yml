@@ -1,0 +1,144 @@
+generated: '2026-08-25'
+method: probed
+source: >-
+  live responses from https://metalenz.com/wp-json/ + openapi/*.yml + the route index and OPTIONS
+  documents
+description: >-
+  Cross-cutting runtime semantics for the WordPress REST content API behind metalenz.com. Metalenz
+  publishes no API documentation, so every convention below was read off the wire or derived from
+  the server's own route index. Where a convention does not exist, that is recorded rather than
+  filled in.
+upstream_reference: https://developer.wordpress.org/rest-api/
+upstream_note: >-
+  These are WordPress core conventions, not conventions Metalenz designed or documents. The
+  upstream reference is listed for a reader's benefit; it is deliberately NOT wired as a
+  Documentation pointer in apis.yml, because it is not published by this provider.
+auth_style:
+  public: anonymous
+  detail: >-
+    No credential of any kind is required for the 23 documented read operations. The only method
+    the server declares is WordPress application passwords (HTTP Basic), which gates writes and
+    privileged reads. See authentication/metalenz-authentication.yml.
+pagination:
+  style: page-number
+  params:
+    page: 1-based page index, minimum 1.
+    per_page: 1..100, default 10. Values outside the bound return 400 rest_invalid_param.
+    offset: absolute record offset, an alternative to page.
+  response_headers:
+    X-WP-Total: total records matching the query.
+    X-WP-TotalPages: total pages at the current per_page.
+    Link: RFC 8288 rel="next" / rel="prev".
+  observed: >-
+    GET /wp/v2/posts?per_page=2 returned X-WP-Total 26, X-WP-TotalPages 13 and
+    'link: <https://metalenz.com/wp-json/wp/v2/posts?per_page=2&page=2>; rel="next"'.
+  gotcha: >-
+    The default ordering is orderby=date&order=desc, and on the media collection a per_page=1 first
+    page answered an empty array while X-WP-Total reported 418. Page through by Link rel="next"
+    rather than assuming page 1 is populated.
+sparse_fields:
+  supported: true
+  param: _fields
+  detail: Comma-separated top-level field list, e.g. ?_fields=id,slug,link,title. Verified live.
+embedding:
+  supported: true
+  param: _embed
+  detail: >-
+    ?_embed inlines linked resources (author, featured media, terms) into an `_embedded` object,
+    saving a round trip. Every record also carries a HAL-shaped `_links` object with self,
+    collection, about, author and wp:term relations plus a `curies` block.
+filtering:
+  detail: >-
+    Collections accept search, slug, include, exclude, before/after, modified_before/modified_after,
+    order, orderby, status and per-taxonomy filters (categories, tags, and their _exclude
+    counterparts). The exact set per operation is enumerated in the OpenAPI documents.
+metadata:
+  supported: partial
+  detail: >-
+    Post and page records expose a `meta` object and an `acf` object (Advanced Custom Fields).
+    On this site `acf` is registered with no properties, so it serialises as an empty structure.
+request_id_tracing:
+  supported: true
+  headers: [x-styx-req-id, x-served-by, x-cache, x-timer]
+  detail: >-
+    The site runs on Pantheon behind Fastly. Every response carries x-styx-req-id (a per-request
+    UUID), x-pantheon-styx-hostname, and Fastly's x-served-by / x-cache / x-cache-hits / x-timer.
+    These are infrastructure identifiers, not an application correlation contract, but they are the
+    only trace handles available and Metalenz support does not accept API tickets.
+caching:
+  detail: >-
+    Responses carry `cache-control: public, max-age=604800` (7 days) and are served through Fastly,
+    so a client may be reading a week-old edge copy. No ETag and no Last-Modified were observed on
+    the JSON responses, so conditional requests are not available.
+versioning:
+  style: uri-path namespace
+  current: wp/v2
+  detail: See lifecycle/metalenz-lifecycle.yml. The version is inherited from WordPress core (6.8.2 at capture), not maintained by Metalenz.
+error_envelope:
+  shape: '{code, message, data:{status[, params, details]}}'
+  content_type: application/json
+  rfc9457: false
+  detail: See errors/metalenz-problem-types.yml. Note that the Fastly/Pantheon edge can return a non-JSON 403 body.
+rate_limit_signaling:
+  supported: false
+  detail: >-
+    No RateLimit-*, X-RateLimit-* or Retry-After header appeared on any of the roughly sixty
+    requests made during this pass, and no 429 was returned. See rate-limits/metalenz-rate-limits.yml.
+cors:
+  supported: true
+  detail: >-
+    access-control-allow-origin reflects the request Origin with `vary: Origin`,
+    access-control-allow-credentials is true, allowed methods are OPTIONS, GET, POST, PUT, PATCH,
+    DELETE, and access-control-expose-headers exposes X-WP-Total, X-WP-TotalPages and Link — so a
+    browser client can read the pagination counters.
+content_negotiation:
+  detail: >-
+    JSON only on wp/v2. The oEmbed endpoint additionally serves XML via ?format=xml. The `_jsonp`
+    and `_envelope` core parameters are available on every route.
+idempotency:
+  supported: na
+  detail: >-
+    The public surface is entirely GET, which is idempotent by HTTP method semantics, but there is
+    no Idempotency-Key header, no replay window and no idempotency contract of any kind. `na`
+    rather than `false`: there is no write operation an idempotency key could protect. No
+    Idempotency pointer is emitted in apis.yml — emitting one would assert a replay guarantee that
+    does not exist.
+dry_run_mode:
+  supported: na
+  detail: No write surface, so nothing to rehearse.
+reversibility:
+  grade: na
+  applicable: false
+  write_surface: false
+  detail: >-
+    Every one of the 23 publicly reachable operations is a read. There is no create, update or
+    delete an anonymous agent can perform, therefore no action to reverse, no cancel/refund/void/
+    undo/restore path to document and no window to state. The write methods that exist on the same
+    WordPress routes (POST/PUT/PATCH/DELETE on posts, pages, media, terms) are credential-gated
+    with no public issuance path, so they are out of scope for any agent consuming this surface.
+    WordPress core does keep a revisions surface and a trash-then-delete two-step for posts, which
+    is a reversal mechanism — but both are `edit`-context and returned 401 anonymously here, so
+    neither can be documented as available. Recorded as `na` and not as an unchecked field, and
+    deliberately NOT graded `documented`: no reversal path is reachable, so there is nothing to
+    credit.
+    NEVER assume a window: none is published, and none is asserted here.
+  operations: []
+cross_links:
+  errors: errors/metalenz-problem-types.yml
+  lifecycle: lifecycle/metalenz-lifecycle.yml
+  authentication: authentication/metalenz-authentication.yml
+  rate_limits: rate-limits/metalenz-rate-limits.yml
+  data_model: data-model/metalenz-data-model.yml
+evidence:
+- url: https://metalenz.com/wp-json/wp/v2/posts?per_page=2
+  http_status: 200
+  finding: 'X-WP-Total 26, X-WP-TotalPages 13, Link rel="next", allow: GET, cache-control public max-age=604800, CORS headers with Origin reflection.'
+- url: https://metalenz.com/wp-json/wp/v2/posts?per_page=999
+  http_status: 400
+  finding: per_page bound is 1..100, enforced with rest_invalid_param.
+- url: https://metalenz.com/wp-json/wp/v2/pages?per_page=100&_fields=id,slug,link,title
+  http_status: 200
+  finding: _fields sparse selection honoured; 29 pages returned.
+- url: https://metalenz.com/wp-json/wp/v2/media?per_page=2
+  http_status: 200
+  finding: Empty array on page 1 with X-WP-Total 418; page 2 returned records. Documented as the pagination gotcha above.

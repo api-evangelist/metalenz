@@ -1,0 +1,1225 @@
+openapi: 3.1.0
+info:
+  title: Metalenz Discovery API
+  version: wp/v2
+  description: The self-describing surface of the metalenz.com WordPress REST API — the route index (212 routes
+    across 13 namespaces at capture), the per-namespace indexes, the registered content types and taxonomies, the
+    publication statuses, the public author records and the comment surface. This is what makes the rest of the
+    API machine-readable in the absence of any published documentation.
+  contact:
+    name: Metalenz
+    url: https://metalenz.com/contact-us/
+  x-derived-from: https://metalenz.com/wp-json/ route index + per-route HTTP OPTIONS schema documents
+  x-derived-on: '2026-08-25'
+  x-api-evangelist-note: Third-party profile. Metalenz is a fabless metasurface-optics (meta-optics) semiconductor
+    company and publishes no developer program, no developer portal and no API documentation; this documents the
+    anonymously readable WordPress REST content API behind metalenz.com. Every path, parameter, enum and property
+    here was read from the server's own published route index and OPTIONS schema documents on 2026-08-25 — nothing
+    is invented.
+servers:
+- url: https://metalenz.com/wp-json
+  description: Metalenz WordPress REST API
+tags:
+- name: Discovery
+  description: Route index, content types, taxonomies, statuses, authors and comments.
+paths:
+  /:
+    get:
+      operationId: getRouteIndex
+      summary: Get the API route index
+      tags:
+      - Discovery
+      description: 'Retrieve the self-describing WordPress REST root document for metalenz.com: site name and description,
+        home URL, the supported authentication schemes, the 13 registered namespaces and all 212 routes with their
+        methods and arguments. This is the document that makes the rest of the surface machine-readable in the absence
+        of any published documentation.'
+      parameters:
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      - name: namespace
+        in: query
+        schema:
+          type: string
+        description: Limit the index to a single registered namespace, e.g. wp/v2.
+      - name: _fields
+        in: query
+        schema:
+          type: string
+        description: Comma-separated list of top-level fields to return.
+      responses:
+        '200':
+          description: The REST API root index
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteIndex'
+  /{namespace}:
+    get:
+      operationId: getNamespaceIndex
+      summary: Get a namespace route index
+      tags:
+      - Discovery
+      description: 'Retrieve the route index for a single registered namespace. Thirteen namespaces are registered
+        on metalenz.com and every namespace index answers anonymously: `wp/v2`, `oembed/1.0`, `wp-site-health/v1`,
+        `wp-block-editor/v1`, `akismet/v1`, `leadin/v1` (HubSpot), `redirection/v1`, `rankmath/v1` (plus `rankmath/v1/ca`,
+        `rankmath/v1/an`, `rankmath/v1/in`), `webp-converter/v1` and `gravityforms/v2`. The operations inside the
+        plugin namespaces are administrative and answer 401 `rest_forbidden` without credentials.'
+      parameters:
+      - name: namespace
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The registered namespace, e.g. wp/v2 or oembed/1.0.
+      responses:
+        '200':
+          description: A namespace route index
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteIndex'
+        '404':
+          description: No route was found matching the URL and request method — rest_no_route.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /wp/v2/types:
+    get:
+      operationId: listTypes
+      summary: List content types
+      tags:
+      - Discovery
+      description: List the registered post types that are visible in the REST API (12 at capture). On metalenz.com
+        the core `post` type is relabelled "Press Releases".
+      parameters:
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      responses:
+        '200':
+          description: List content types
+          headers: &id001
+            X-WP-Total:
+              description: Total number of records matching the query.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the current per_page.
+              schema:
+                type: integer
+            Link:
+              description: RFC 8288 pagination links (rel="next" / rel="prev").
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Type'
+        '400':
+          description: Invalid parameter(s) — rest_invalid_param.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication required or insufficient permission — rest_forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /wp/v2/types/{type}:
+    get:
+      operationId: getType
+      summary: Get a content type
+      tags:
+      - Discovery
+      description: Retrieve the registration record for a single post type.
+      parameters:
+      - name: type
+        in: path
+        required: true
+        schema:
+          type: string
+        description: An alphanumeric identifier for the post type.
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      responses:
+        '200':
+          description: Get a content type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Type'
+        '400':
+          description: Invalid parameter(s) — rest_invalid_param.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: No post type exists with that name — rest_type_invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /wp/v2/taxonomies:
+    get:
+      operationId: listTaxonomies
+      summary: List taxonomies
+      tags:
+      - Discovery
+      description: List the registered taxonomies visible in the REST API — `category`, `post_tag`, `nav_menu` and
+        `wp_pattern_category` at capture.
+      parameters:
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      - name: type
+        in: query
+        schema:
+          type: string
+        description: Limit results to taxonomies associated with a specific post type.
+      responses:
+        '200':
+          description: List taxonomies
+          headers: *id001
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Taxonomy'
+        '400':
+          description: Invalid parameter(s) — rest_invalid_param.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication required or insufficient permission — rest_forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /wp/v2/taxonomies/{taxonomy}:
+    get:
+      operationId: getTaxonomy
+      summary: Get a taxonomy
+      tags:
+      - Discovery
+      description: Retrieve the registration record for a single taxonomy.
+      parameters:
+      - name: taxonomy
+        in: path
+        required: true
+        schema:
+          type: string
+        description: An alphanumeric identifier for the taxonomy.
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      responses:
+        '200':
+          description: Get a taxonomy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Taxonomy'
+        '400':
+          description: Invalid parameter(s) — rest_invalid_param.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: No taxonomy exists with that name — rest_taxonomy_invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /wp/v2/statuses:
+    get:
+      operationId: listStatuses
+      summary: List publication statuses
+      tags:
+      - Discovery
+      description: List the publication statuses exposed to anonymous callers — `publish` and the `acf-disabled`
+        status registered by Advanced Custom Fields.
+      parameters:
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      responses:
+        '200':
+          description: List publication statuses
+          headers: *id001
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Status'
+        '400':
+          description: Invalid parameter(s) — rest_invalid_param.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication required or insufficient permission — rest_forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /wp/v2/statuses/{status}:
+    get:
+      operationId: getStatus
+      summary: Get a publication status
+      tags:
+      - Discovery
+      description: Retrieve a single publication status record.
+      parameters:
+      - name: status
+        in: path
+        required: true
+        schema:
+          type: string
+        description: An alphanumeric identifier for the status.
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      responses:
+        '200':
+          description: Get a publication status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+        '400':
+          description: Invalid parameter(s) — rest_invalid_param.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: No status exists with that name — rest_status_invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /wp/v2/users:
+    get:
+      operationId: listAuthors
+      summary: List public authors
+      tags:
+      - Discovery
+      description: List the WordPress accounts that have authored at least one published post (3 at capture). The
+        anonymous `view` context returns display name, slug, description, site URL, avatar URLs and the author archive
+        link; email address, registration date, role and capability fields are `edit`-context only and are withheld
+        without credentials. Personal data — treat as such.
+      parameters:
+      - name: capabilities
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+        description: Limit result set to users matching at least one specific capability provided. Accepts csv list
+          or single capability.
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      - name: exclude
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+          default: []
+        description: Ensure result set excludes specific IDs.
+      - name: has_published_posts
+        in: query
+        schema:
+          type:
+          - boolean
+          - array
+          items:
+            type: string
+            enum:
+              post: post
+              page: page
+              attachment: attachment
+              nav_menu_item: nav_menu_item
+              wp_block: wp_block
+              wp_template: wp_template
+              wp_template_part: wp_template_part
+              wp_global_styles: wp_global_styles
+              wp_navigation: wp_navigation
+              wp_font_family: wp_font_family
+              wp_font_face: wp_font_face
+              rm_content_editor: rm_content_editor
+        description: Limit result set to users who have published posts.
+      - name: include
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+          default: []
+        description: Limit result set to specific IDs.
+      - name: offset
+        in: query
+        schema:
+          type: integer
+        description: Offset the result set by a specific number of items.
+      - name: order
+        in: query
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: asc
+        description: Order sort attribute ascending or descending.
+      - name: orderby
+        in: query
+        schema:
+          type: string
+          enum:
+          - id
+          - include
+          - name
+          - registered_date
+          - slug
+          - include_slugs
+          - email
+          - url
+          default: name
+        description: Sort collection by user attribute.
+      - name: page
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        description: Current page of the collection.
+      - name: per_page
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+        description: Maximum number of items to be returned in result set.
+      - name: roles
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+        description: Limit result set to users matching at least one specific role provided. Accepts csv list or
+          single role.
+      - name: search
+        in: query
+        schema:
+          type: string
+        description: Limit results to those matching a string.
+      - name: search_columns
+        in: query
+        schema:
+          type: array
+          items:
+            enum:
+            - email
+            - name
+            - id
+            - username
+            - slug
+            type: string
+          default: []
+        description: Array of column names to be searched.
+      - name: slug
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+        description: Limit result set to users with one or more specific slugs.
+      - name: who
+        in: query
+        schema:
+          type: string
+          enum:
+          - authors
+        description: Limit result set to users who are considered authors.
+      responses:
+        '200':
+          description: List public authors
+          headers: *id001
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid parameter(s) — rest_invalid_param.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication required or insufficient permission — rest_forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /wp/v2/users/{id}:
+    get:
+      operationId: getAuthor
+      summary: Get a public author
+      tags:
+      - Discovery
+      description: Retrieve a single public author record by numeric user ID.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: Unique identifier for the user.
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      responses:
+        '200':
+          description: Get a public author
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid parameter(s) — rest_invalid_param.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: No user exists with that ID — rest_user_invalid_id.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /wp/v2/comments:
+    get:
+      operationId: listComments
+      summary: List comments
+      tags:
+      - Discovery
+      description: 'List approved comments. Comments are switched off across metalenz.com: the collection answered
+        X-WP-Total 0 at capture.'
+      parameters:
+      - name: after
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: Limit response to comments published after a given ISO8601 compliant date.
+      - name: author
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Limit result set to comments assigned to specific user IDs. Requires authorization.
+      - name: author_email
+        in: query
+        schema:
+          type: string
+          format: email
+        description: Limit result set to that from a specific author email. Requires authorization.
+      - name: author_exclude
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Ensure result set excludes comments assigned to specific user IDs. Requires authorization.
+      - name: before
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: Limit response to comments published before a given ISO8601 compliant date.
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      - name: exclude
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+          default: []
+        description: Ensure result set excludes specific IDs.
+      - name: include
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+          default: []
+        description: Limit result set to specific IDs.
+      - name: offset
+        in: query
+        schema:
+          type: integer
+        description: Offset the result set by a specific number of items.
+      - name: order
+        in: query
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+        description: Order sort attribute ascending or descending.
+      - name: orderby
+        in: query
+        schema:
+          type: string
+          enum:
+          - date
+          - date_gmt
+          - id
+          - include
+          - post
+          - parent
+          - type
+          default: date_gmt
+        description: Sort collection by comment attribute.
+      - name: page
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        description: Current page of the collection.
+      - name: parent
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+          default: []
+        description: Limit result set to comments of specific parent IDs.
+      - name: parent_exclude
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+          default: []
+        description: Ensure result set excludes specific parent IDs.
+      - name: password
+        in: query
+        schema:
+          type: string
+        description: The password for the post if it is password protected.
+      - name: per_page
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+        description: Maximum number of items to be returned in result set.
+      - name: post
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+          default: []
+        description: Limit result set to comments assigned to specific post IDs.
+      - name: search
+        in: query
+        schema:
+          type: string
+        description: Limit results to those matching a string.
+      - name: status
+        in: query
+        schema:
+          type: string
+          default: approve
+        description: Limit result set to comments assigned a specific status. Requires authorization.
+      - name: type
+        in: query
+        schema:
+          type: string
+          default: comment
+        description: Limit result set to comments assigned a specific type. Requires authorization.
+      responses:
+        '200':
+          description: List comments
+          headers: *id001
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
+        '400':
+          description: Invalid parameter(s) — rest_invalid_param.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication required or insufficient permission — rest_forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Error:
+      type: object
+      description: The WordPress REST API error envelope returned on every 4xx/5xx.
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code, e.g. rest_post_invalid_id.
+        message:
+          type: string
+          description: Human-readable error message.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: The HTTP status code.
+            params:
+              type: object
+              description: Per-parameter validation messages (rest_invalid_param only).
+            details:
+              type: object
+              description: Per-parameter validation detail (rest_invalid_param only).
+      required:
+      - code
+      - message
+    RouteIndex:
+      type: object
+      description: 'The WordPress REST discovery document: site identity, registered namespaces and every route
+        with its arguments.'
+      properties:
+        name:
+          type: string
+          description: Site title — "Metalenz".
+        description:
+          type: string
+          description: Site tagline — "Metasurface Optics to Enable the Next Generation of Sensing".
+        url:
+          type: string
+          format: uri
+          description: Site URL.
+        home:
+          type: string
+          format: uri
+          description: Home URL.
+        gmt_offset:
+          type: number
+          description: Site GMT offset in hours.
+        timezone_string:
+          type: string
+          description: Site timezone as an Olson identifier, when set.
+        namespaces:
+          type: array
+          items:
+            type: string
+          description: Every registered REST namespace.
+        authentication:
+          type: object
+          description: The authentication schemes the server advertises. metalenz.com advertises WordPress application
+            passwords only.
+        routes:
+          type: object
+          description: Every registered route keyed by its path regex, each carrying its namespace, methods, endpoints
+            and per-argument schemas.
+        site_logo:
+          type: integer
+          description: Attachment ID of the site logo, or 0.
+        site_icon_url:
+          type: string
+          format: uri
+          description: URL of the site icon.
+        _links:
+          type: object
+          description: HAL-style link relations.
+    Type:
+      title: type
+      type: object
+      properties:
+        capabilities:
+          description: All capabilities used by the post type.
+          type: object
+          readOnly: true
+        description:
+          description: A human-readable description of the post type.
+          type: string
+          readOnly: true
+        hierarchical:
+          description: Whether or not the post type should have children.
+          type: boolean
+          readOnly: true
+        viewable:
+          description: Whether or not the post type can be viewed.
+          type: boolean
+          readOnly: true
+        labels:
+          description: Human-readable labels for the post type for various contexts.
+          type: object
+          readOnly: true
+        name:
+          description: The title for the post type.
+          type: string
+          readOnly: true
+        slug:
+          description: An alphanumeric identifier for the post type.
+          type: string
+          readOnly: true
+        supports:
+          description: All features, supported by the post type.
+          type: object
+          readOnly: true
+        has_archive:
+          description: If the value is a string, the value will be used as the archive slug. If the value is false
+            the post type has no archive.
+          type:
+          - string
+          - boolean
+          readOnly: true
+        taxonomies:
+          description: Taxonomies associated with post type.
+          type: array
+          items:
+            type: string
+          readOnly: true
+        rest_base:
+          description: REST base route for the post type.
+          type: string
+          readOnly: true
+        rest_namespace:
+          description: REST route's namespace for the post type.
+          type: string
+          readOnly: true
+        visibility:
+          description: The visibility settings for the post type.
+          type: object
+          readOnly: true
+          properties:
+            show_ui:
+              description: Whether to generate a default UI for managing this post type.
+              type: boolean
+            show_in_nav_menus:
+              description: Whether to make the post type available for selection in navigation menus.
+              type: boolean
+        icon:
+          description: The icon for the post type.
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        template:
+          type:
+          - array
+          description: The block template associated with the post type.
+          readOnly: true
+        template_lock:
+          type:
+          - string
+          - boolean
+          enum:
+          - all
+          - insert
+          - contentOnly
+          - false
+          description: The template_lock associated with the post type, or false if none.
+          readOnly: true
+    Taxonomy:
+      title: taxonomy
+      type: object
+      properties:
+        capabilities:
+          description: All capabilities used by the taxonomy.
+          type: object
+          readOnly: true
+        description:
+          description: A human-readable description of the taxonomy.
+          type: string
+          readOnly: true
+        hierarchical:
+          description: Whether or not the taxonomy should have children.
+          type: boolean
+          readOnly: true
+        labels:
+          description: Human-readable labels for the taxonomy for various contexts.
+          type: object
+          readOnly: true
+        name:
+          description: The title for the taxonomy.
+          type: string
+          readOnly: true
+        slug:
+          description: An alphanumeric identifier for the taxonomy.
+          type: string
+          readOnly: true
+        show_cloud:
+          description: Whether or not the term cloud should be displayed.
+          type: boolean
+          readOnly: true
+        types:
+          description: Types associated with the taxonomy.
+          type: array
+          items:
+            type: string
+          readOnly: true
+        rest_base:
+          description: REST base route for the taxonomy.
+          type: string
+          readOnly: true
+        rest_namespace:
+          description: REST namespace route for the taxonomy.
+          type: string
+          readOnly: true
+        visibility:
+          description: The visibility settings for the taxonomy.
+          type: object
+          readOnly: true
+          properties:
+            public:
+              description: Whether a taxonomy is intended for use publicly either via the admin interface or by
+                front-end users.
+              type: boolean
+            publicly_queryable:
+              description: Whether the taxonomy is publicly queryable.
+              type: boolean
+            show_ui:
+              description: Whether to generate a default UI for managing this taxonomy.
+              type: boolean
+            show_admin_column:
+              description: Whether to allow automatic creation of taxonomy columns on associated post-types table.
+              type: boolean
+            show_in_nav_menus:
+              description: Whether to make the taxonomy available for selection in navigation menus.
+              type: boolean
+            show_in_quick_edit:
+              description: Whether to show the taxonomy in the quick/bulk edit panel.
+              type: boolean
+    Status:
+      title: status
+      type: object
+      properties:
+        name:
+          description: The title for the status.
+          type: string
+          readOnly: true
+        private:
+          description: Whether posts with this status should be private.
+          type: boolean
+          readOnly: true
+        protected:
+          description: Whether posts with this status should be protected.
+          type: boolean
+          readOnly: true
+        public:
+          description: Whether posts of this status should be shown in the front end of the site.
+          type: boolean
+          readOnly: true
+        queryable:
+          description: Whether posts with this status should be publicly-queryable.
+          type: boolean
+          readOnly: true
+        show_in_list:
+          description: Whether to include posts in the edit listing for their post type.
+          type: boolean
+          readOnly: true
+        slug:
+          description: An alphanumeric identifier for the status.
+          type: string
+          readOnly: true
+        date_floating:
+          description: Whether posts of this status may have floating published dates.
+          type: boolean
+          readOnly: true
+    User:
+      title: user
+      type: object
+      properties:
+        id:
+          description: Unique identifier for the user.
+          type: integer
+          readOnly: true
+        username:
+          description: Login name for the user.
+          type: string
+        name:
+          description: Display name for the user.
+          type: string
+        first_name:
+          description: First name for the user.
+          type: string
+        last_name:
+          description: Last name for the user.
+          type: string
+        email:
+          description: The email address for the user.
+          type: string
+          format: email
+        url:
+          description: URL of the user.
+          type: string
+          format: uri
+        description:
+          description: Description of the user.
+          type: string
+        link:
+          description: Author URL of the user.
+          type: string
+          format: uri
+          readOnly: true
+        locale:
+          description: Locale for the user.
+          type: string
+          enum:
+          - ''
+          - en_US
+        nickname:
+          description: The nickname for the user.
+          type: string
+        slug:
+          description: An alphanumeric identifier for the user.
+          type: string
+        registered_date:
+          description: Registration date for the user.
+          type: string
+          format: date-time
+          readOnly: true
+        roles:
+          description: Roles assigned to the user.
+          type: array
+          items:
+            type: string
+        password:
+          description: Password for the user (never included).
+          type: string
+        capabilities:
+          description: All capabilities assigned to the user.
+          type: object
+          readOnly: true
+        extra_capabilities:
+          description: Any extra capabilities assigned to the user.
+          type: object
+          readOnly: true
+        avatar_urls:
+          description: Avatar URLs for the user.
+          type: object
+          readOnly: true
+          properties:
+            '24':
+              description: Avatar URL with image size of 24 pixels.
+              type: string
+              format: uri
+            '48':
+              description: Avatar URL with image size of 48 pixels.
+              type: string
+              format: uri
+            '96':
+              description: Avatar URL with image size of 96 pixels.
+              type: string
+              format: uri
+        meta:
+          description: Meta fields.
+          type: object
+          properties:
+            persisted_preferences:
+              type: object
+              title: ''
+              description: ''
+              properties:
+                _modified:
+                  description: The date and time the preferences were updated.
+                  type: string
+                  format: date-time
+                  readOnly: false
+              additionalProperties: true
+              default: []
+        acf:
+          description: ACF field data
+          type: object
+    Comment:
+      title: comment
+      type: object
+      properties:
+        id:
+          description: Unique identifier for the comment.
+          type: integer
+          readOnly: true
+        author:
+          description: The ID of the user object, if author was a user.
+          type: integer
+        author_email:
+          description: Email address for the comment author.
+          type: string
+          format: email
+        author_ip:
+          description: IP address for the comment author.
+          type: string
+          format: ip
+        author_name:
+          description: Display name for the comment author.
+          type: string
+        author_url:
+          description: URL for the comment author.
+          type: string
+          format: uri
+        author_user_agent:
+          description: User agent for the comment author.
+          type: string
+        content:
+          description: The content for the comment.
+          type: object
+          properties:
+            raw:
+              description: Content for the comment, as it exists in the database.
+              type: string
+            rendered:
+              description: HTML content for the comment, transformed for display.
+              type: string
+              readOnly: true
+        date:
+          description: The date the comment was published, in the site's timezone.
+          type: string
+          format: date-time
+        date_gmt:
+          description: The date the comment was published, as GMT.
+          type: string
+          format: date-time
+        link:
+          description: URL to the comment.
+          type: string
+          format: uri
+          readOnly: true
+        parent:
+          description: The ID for the parent of the comment.
+          type: integer
+          default: 0
+        post:
+          description: The ID of the associated post object.
+          type: integer
+          default: 0
+        status:
+          description: State of the comment.
+          type: string
+        type:
+          description: Type of the comment.
+          type: string
+          readOnly: true
+        author_avatar_urls:
+          description: Avatar URLs for the comment author.
+          type: object
+          readOnly: true
+          properties:
+            '24':
+              description: Avatar URL with image size of 24 pixels.
+              type: string
+              format: uri
+            '48':
+              description: Avatar URL with image size of 48 pixels.
+              type: string
+              format: uri
+            '96':
+              description: Avatar URL with image size of 96 pixels.
+              type: string
+              format: uri
+        meta:
+          description: Meta fields.
+          type: object
+        acf:
+          description: ACF field data
+          type: object

@@ -64,5 +64,35 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Metalenz is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://www.nasdaqprivatemarket.com/
+Metalenz is a fabless semiconductor optics company in Boston, Massachusetts that commercialises meta-optics — flat metasurface lenses that replace stacks of curved refractive elements with a single planar chip patterned by nanostructures and mass produced in a standard semiconductor foundry. The company was founded in 2016 by CEO Rob Devlin and Harvard professor Federico Capasso out of the Capasso Lab at the Harvard John A. Paulson School of Engineering and Applied Sciences, and holds the exclusive worldwide licence to that lab's metasurface intellectual property, now more than 150 issued and pending patents. Its first-generation metasurfaces reached mass production in 2022 through a manufacturing partnership with STMicroelectronics and have since shipped in well over 100 million consumer devices. The current product line is built on the PolarEyes polarization imaging platform: Polar ID, a single-camera polarization face authentication system for smartphones that works under the display and uses the Samsung ISOCELL Vizion 931 sensor and Qualcomm Snapdragon imaging stack; Polar 3D, on-device relightable selfies and avatars from one image; and the Orion and Gemini dot-pattern projectors for structured-light 3D sensing. Metalenz sells optical components, licences and full-stack biometric solutions to device makers and foundries — UMC and STMicroelectronics are named manufacturing partners — and is backed by Neotribe Ventures, Intel Capital, TDK Ventures, 3M, Applied Ventures, M Ventures, Braemar Energy Ventures and Foothill Ventures. It sells silicon and IP, not software: it publishes no developer program, no developer portal, no SDK and no API documentation of any kind. The only machine-readable interface it exposes to the public is the WordPress REST content API behind metalenz.com, which is anonymously readable, read-only without credentials, and captured here for discovery purposes.
+
+## APIs
+
+- **Metalenz Press Releases API** — `https://metalenz.com/wp-json`
+- **Metalenz Pages API** — `https://metalenz.com/wp-json`
+- **Metalenz Media API** — `https://metalenz.com/wp-json`
+- **Metalenz Taxonomy API** — `https://metalenz.com/wp-json`
+- **Metalenz Search API** — `https://metalenz.com/wp-json`
+- **Metalenz Discovery API** — `https://metalenz.com/wp-json`
+- **Metalenz oEmbed API** — `https://metalenz.com/wp-json`
+
+## Links
+
+- Website: https://metalenz.com/
+- About: https://metalenz.com/about-us/
+- Leadership: https://metalenz.com/leadership/
+- Products: https://metalenz.com/all-products/
+- Technology: https://metalenz.com/our-technology/
+- Press: https://metalenz.com/press-releases/
+- News: https://metalenz.com/media-coverage/
+- Events: https://metalenz.com/events/
+- Videos: https://metalenz.com/video-gallery/
+- BlogRSS: https://metalenz.com/feed/
+- Support: https://metalenz.com/contact-us/
+- Contact: https://metalenz.com/contact-us/
+- Careers: https://metalenz.com/careers/
+- SiteMap: https://metalenz.com/sitemap_index.xml
+- DocumentationPortal: https://docs.metalenz.com/
+- TermsOfService: https://metalenz.com/terms-and-conditions-of-sale/
+- GitHubOrganization: https://github.com/Metalenz
+- LinkedIn: https://www.linkedin.com/company/metalenz/

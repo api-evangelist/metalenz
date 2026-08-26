@@ -1,0 +1,167 @@
+generated: '2026-08-25'
+method: derived
+source: mcp/metalenz-mcp.yml + openapi/
+description: 'Binding between the candidate MCP tool set and the OpenAPI operations that back it. Both sides of
+  this crosswalk are API Evangelist artifacts — Metalenz operates no MCP server and publishes no OpenAPI — so there
+  is no provider surface divergence to record. The useful findings are in the coverage block: 23 of the 212 routes
+  the live host registers are documented here, and 21 of those 23 are packaged as tools. The rest of the live surface
+  is plugin and administrative routes that return 401 or 403 to an anonymous caller.'
+surfaces:
+  openapi:
+    files: 7
+    operations: 23
+    gated: false
+    note: Derived from the server's own route index and OPTIONS schema documents; anonymously readable.
+  mcp:
+    url: null
+    gated: null
+    note: No server exists. tools/list was never reachable to introspect; the tool set is candidate.
+  graphql:
+    endpoint: null
+    note: No GraphQL surface. /graphql returned 404 and no graphql route appears in the 212-route index.
+coverage:
+  tools_named: 21
+  tools_bound: 21
+  tools_unbound: 0
+  mcp_only: 0
+  rest_ops_total: 23
+  rest_ops_with_tool: 21
+  rest_only: 2
+  live_routes_on_host: 212
+  live_routes_documented: 23
+  binding_confidence: high
+crosswalk:
+- tool: list_press_releases
+  category: content
+  rest:
+  - listPressReleases
+  binding: rest
+  confidence: high
+- tool: get_press_release
+  category: content
+  rest:
+  - getPressRelease
+  binding: rest
+  confidence: high
+- tool: list_pages
+  category: content
+  rest:
+  - listPages
+  binding: rest
+  confidence: high
+- tool: get_page
+  category: content
+  rest:
+  - getPage
+  binding: rest
+  confidence: high
+- tool: list_media
+  category: media
+  rest:
+  - listMedia
+  binding: rest
+  confidence: high
+- tool: get_media
+  category: media
+  rest:
+  - getMedia
+  binding: rest
+  confidence: high
+- tool: list_categories
+  category: taxonomy
+  rest:
+  - listCategories
+  binding: rest
+  confidence: high
+- tool: get_category
+  category: taxonomy
+  rest:
+  - getCategory
+  binding: rest
+  confidence: high
+- tool: list_tags
+  category: taxonomy
+  rest:
+  - listTags
+  binding: rest
+  confidence: high
+- tool: get_tag
+  category: taxonomy
+  rest:
+  - getTag
+  binding: rest
+  confidence: high
+- tool: search_site
+  category: search
+  rest:
+  - search
+  binding: rest
+  confidence: high
+- tool: get_route_index
+  category: discovery
+  rest:
+  - getRouteIndex
+  binding: rest
+  confidence: high
+- tool: get_namespace_index
+  category: discovery
+  rest:
+  - getNamespaceIndex
+  binding: rest
+  confidence: high
+- tool: list_content_types
+  category: discovery
+  rest:
+  - listTypes
+  binding: rest
+  confidence: high
+- tool: get_content_type
+  category: discovery
+  rest:
+  - getType
+  binding: rest
+  confidence: high
+- tool: list_taxonomies
+  category: discovery
+  rest:
+  - listTaxonomies
+  binding: rest
+  confidence: high
+- tool: get_taxonomy
+  category: discovery
+  rest:
+  - getTaxonomy
+  binding: rest
+  confidence: high
+- tool: list_statuses
+  category: discovery
+  rest:
+  - listStatuses
+  binding: rest
+  confidence: high
+- tool: get_status
+  category: discovery
+  rest:
+  - getStatus
+  binding: rest
+  confidence: high
+- tool: list_comments
+  category: discovery
+  rest:
+  - listComments
+  binding: rest
+  confidence: high
+- tool: get_oembed
+  category: embed
+  rest:
+  - getOembed
+  binding: rest
+  confidence: high
+mcp_only: []
+rest_only:
+- operationId: listAuthors
+  reason: Returns real WordPress accounts — personal data. Packaging a people endpoint as an agent tool is out of
+    policy for this pipeline; the endpoint is still documented structurally in the OpenAPI and in data-model/.
+- operationId: getAuthor
+  reason: Same as listAuthors — a per-person lookup is the sharper form of the same exposure and is deliberately
+    not packaged.
