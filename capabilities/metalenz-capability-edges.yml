@@ -1,0 +1,25 @@
+slug: metalenz
+provider: Metalenz
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Automotive & Mobility
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 1
+edges:
+- tag: Press Releases
+  spec_file: metalenz-press-releases-api-openapi.yml
+  capability_id: BC-850.40
+  capability_id_l1: BC-850
+  capability_name: Media Relations Management
+  confidence: 0.7
+  evidence: '"carries the company''s press releases, product announcements and media-coverage notices";
+    listPressReleases / getPressRelease'
+  reason: The post type is explicitly the newsroom archive of press releases and media coverage — media
+    relations content, even though delivered through a generic WordPress endpoint.
