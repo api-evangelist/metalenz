@@ -52,6 +52,23 @@ tags:
 - Face Authentication
 - Polarization Imaging
 - 3D Sensing
+- Computer-Vision
+- Consumer Electronics
+- Automotive
+- Robotics
+- Hardware
+- Content
+tags_raw:
+- Company
+- Semiconductors
+- Optics
+- Meta-Optics
+- Metasurface
+- Photonics
+- Biometrics
+- Face Authentication
+- Polarization Imaging
+- 3D Sensing
 - Computer Vision
 - Consumer Electronics
 - Automotive
@@ -100,6 +117,10 @@ apis:
   humanURL: https://metalenz.com/
   baseURL: https://metalenz.com/wp-json
   tags:
+  - Pages
+  - Content
+  - Product
+  tags_raw:
   - Pages
   - Content
   - Products
