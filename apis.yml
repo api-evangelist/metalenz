@@ -93,10 +93,10 @@ apis:
 - aid: metalenz:metalenz-press-releases-api
   name: Metalenz Press Releases API
   description: >-
-    Public, unauthenticated read access to the Metalenz newsroom via the WordPress core REST API.
-    The `post` content type on metalenz.com is registered with the label "Press Releases" and
-    carries the company's press releases, product launches, funding announcements and award
-    notices back to the February 2021 launch out of stealth. Verified live at 26 published items.
+    Public, unauthenticated read access to the Metalenz newsroom via the WordPress core REST API. The
+    `post` content type on metalenz.com is registered with the label "Press Releases" and carries the
+    company's press releases, product launches, funding announcements and award notices back to the February
+    2021 launch out of stealth. Verified live at 26 published items.
   humanURL: https://metalenz.com/press-releases/
   baseURL: https://metalenz.com/wp-json
   tags:
@@ -123,11 +123,10 @@ apis:
 - aid: metalenz:metalenz-pages-api
   name: Metalenz Pages API
   description: >-
-    Public, unauthenticated read access to the static page tree behind metalenz.com — the Polar ID,
-    Polar 3D, PolarEyes, Orion and Gemini product pages, the meta-optics and foundational technology
-    explainers, the consumer-electronics, automotive and robotics market pages, About Us,
-    Leadership, Careers, Events, Video Gallery and the Terms and Conditions of Sale. Verified live
-    at 29 published pages.
+    Public, unauthenticated read access to the static page tree behind metalenz.com — the Polar ID, Polar
+    3D, PolarEyes, Orion and Gemini product pages, the meta-optics and foundational technology explainers,
+    the consumer-electronics, automotive and robotics market pages, About Us, Leadership, Careers, Events,
+    Video Gallery and the Terms and Conditions of Sale. Verified live at 29 published pages.
   humanURL: https://metalenz.com/
   baseURL: https://metalenz.com/wp-json
   tags:
@@ -158,10 +157,10 @@ apis:
 - aid: metalenz:metalenz-media-api
   name: Metalenz Media API
   description: >-
-    Public, unauthenticated read access to the media library behind metalenz.com — Polar ID and
-    Polar 3D product imagery, metasurface and meta-optics diagrams, conference and event
-    photography, leadership headshots, brand and sub-brand logos and press assets, each with its
-    generated size variants. Verified live at 418 attachments.
+    Public, unauthenticated read access to the media library behind metalenz.com — Polar ID and Polar
+    3D product imagery, metasurface and meta-optics diagrams, conference and event photography, leadership
+    headshots, brand and sub-brand logos and press assets, each with its generated size variants. Verified
+    live at 418 attachments.
   humanURL: https://metalenz.com/media-coverage/
   baseURL: https://metalenz.com/wp-json
   tags:
@@ -188,9 +187,9 @@ apis:
 - aid: metalenz:metalenz-taxonomy-api
   name: Metalenz Taxonomy API
   description: >-
-    Public, unauthenticated read access to the classification layer over the Metalenz newsroom —
-    the `category` taxonomy and the `post_tag` taxonomy, with their term records, counts and
-    archive links. Verified live at 1 category and 2 tags (`polar-3d`, `new-products`).
+    Public, unauthenticated read access to the classification layer over the Metalenz newsroom — the `category`
+    taxonomy and the `post_tag` taxonomy, with their term records, counts and archive links. Verified
+    live at 1 category and 2 tags (`polar-3d`, `new-products`).
   humanURL: https://metalenz.com/press-releases/
   baseURL: https://metalenz.com/wp-json
   tags:
@@ -216,9 +215,9 @@ apis:
 - aid: metalenz:metalenz-search-api
   name: Metalenz Search API
   description: >-
-    Public, unauthenticated cross-content search over metalenz.com — press releases and static
-    pages together — returning lightweight id / title / url / type / subtype records that link back
-    to the full object. Verified live returning 34 matching objects for the capture probe term.
+    Public, unauthenticated cross-content search over metalenz.com — press releases and static pages together
+    — returning lightweight id / title / url / type / subtype records that link back to the full object.
+    Verified live returning 34 matching objects for the capture probe term.
   humanURL: https://metalenz.com/
   baseURL: https://metalenz.com/wp-json
   tags:
@@ -242,11 +241,10 @@ apis:
 - aid: metalenz:metalenz-discovery-api
   name: Metalenz Discovery API
   description: >-
-    The self-describing surface of the metalenz.com WordPress REST API — the route index, the
-    per-namespace indexes, the registered content types and taxonomies, the publication statuses,
-    the public author records and the comment surface. This is what makes the rest of the API
-    machine-readable in the absence of any published documentation. Verified live at 212 routes
-    across 13 namespaces.
+    The self-describing surface of the metalenz.com WordPress REST API — the route index, the per-namespace
+    indexes, the registered content types and taxonomies, the publication statuses, the public author
+    records and the comment surface. This is what makes the rest of the API machine-readable in the absence
+    of any published documentation. Verified live at 212 routes across 13 namespaces.
   humanURL: https://metalenz.com/wp-json/
   baseURL: https://metalenz.com/wp-json
   tags:
@@ -268,24 +266,16 @@ apis:
     url: conformance/metalenz-conformance.yml
   - type: Lifecycle
     url: lifecycle/metalenz-lifecycle.yml
-- aid: metalenz:metalenz-oembed-api
-  name: Metalenz oEmbed API
-  description: >-
-    Public oEmbed 1.0 provider endpoint for metalenz.com URLs, returning embeddable rich metadata —
-    title, author, provider, thumbnail and iframe HTML — for any published post or page. The
-    endpoint is advertised as a discoverable oEmbed provider link in the head of every metalenz.com
-    page and answers anonymously in both JSON and XML.
-  humanURL: https://metalenz.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fmetalenz.com%2F
+- aid: metalenz:metalenz-o-embed-api
+  name: Metalenz o Embed API
+  description: oEmbed 1.0 rich-embed provider for metalenz.com URLs.
+  humanURL: https://metalenz.com/press-releases/
   baseURL: https://metalenz.com/wp-json
   tags:
-  - oEmbed
-  - Embeds
-  - Content
+  - o Embed
   properties:
   - type: OpenAPI
-    url: openapi/metalenz-oembed-api-openapi.yml
-  - type: Overlay
-    url: overlays/metalenz-oembed-api-overlay.yaml
+    url: openapi/metalenz-o-embed-api-openapi.yml
   - type: Authentication
     url: authentication/metalenz-authentication.yml
   - type: ErrorCatalog
@@ -300,6 +290,8 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Overlay
+  url: overlays/metalenz-oembed-api-overlay.yaml
 - type: CapabilityMap
   url: capabilities/metalenz-capability-edges.yml
   name: Metalenz Business Capability Map
