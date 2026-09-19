@@ -272,6 +272,8 @@ apis:
   humanURL: https://metalenz.com/press-releases/
   baseURL: https://metalenz.com/wp-json
   tags:
+  - oEmbed
+  tags_raw:
   - o Embed
   properties:
   - type: OpenAPI
