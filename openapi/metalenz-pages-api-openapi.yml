@@ -1,23 +1,14 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   title: Metalenz Pages API
   version: wp/v2
-  description: 'Public, unauthenticated read access to the static page tree behind metalenz.com — the product pages
-    (Polar ID, Polar 3D, PolarEyes, Orion and Gemini pattern projectors), the technology and meta-optics explainers,
-    the market pages (consumer electronics, automotive, smart home and industrial robotics), About Us, Leadership,
-    Careers, Events, Video Gallery and the Terms and Conditions of Sale (29 published pages at capture). Anonymous
-    access is read-only: the collection answers `Allow: GET` without credentials. Write methods exist on the same
-    routes but require WordPress application-password authentication and are not part of the public surface.'
+  description: Public, unauthenticated read access to the static page tree behind metalenz.com — the product pages (Polar ID, Polar 3D, PolarEyes, Orion and Gemini pattern projectors), the technology and meta-optics explainers, the market pages (consumer electronics, automotive, smart home and industrial robotics), About Us, Leadership, Careers, Events, Video Gallery and the Terms and Conditions of Sale (29 published pages at capture).
   contact:
     name: Metalenz
     url: https://metalenz.com/contact-us/
   x-derived-from: https://metalenz.com/wp-json/ route index + per-route HTTP OPTIONS schema documents
   x-derived-on: '2026-08-25'
-  x-api-evangelist-note: Third-party profile. Metalenz is a fabless metasurface-optics (meta-optics) semiconductor
-    company and publishes no developer program, no developer portal and no API documentation; this documents the
-    anonymously readable WordPress REST content API behind metalenz.com. Every path, parameter, enum and property
-    here was read from the server's own published route index and OPTIONS schema documents on 2026-08-25 — nothing
-    is invented.
+  x-api-evangelist-note: Third-party profile. Metalenz is a fabless metasurface-optics (meta-optics) semiconductor company and publishes no developer program, no developer portal and no API documentation; this documents the anonymously readable WordPress REST content API behind metalenz.com. Every path, parameter, enum and property here was read from the server's own published route index and OPTIONS schema documents on 2026-08-25 — nothing is invented.
 servers:
 - url: https://metalenz.com/wp-json
   description: Metalenz WordPress REST API
@@ -311,31 +302,6 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
-    Error:
-      type: object
-      description: The WordPress REST API error envelope returned on every 4xx/5xx.
-      properties:
-        code:
-          type: string
-          description: Machine-readable error code, e.g. rest_post_invalid_id.
-        message:
-          type: string
-          description: Human-readable error message.
-        data:
-          type: object
-          properties:
-            status:
-              type: integer
-              description: The HTTP status code.
-            params:
-              type: object
-              description: Per-parameter validation messages (rest_invalid_param only).
-            details:
-              type: object
-              description: Per-parameter validation detail (rest_invalid_param only).
-      required:
-      - code
-      - message
     Page:
       title: page
       type: object
@@ -561,3 +527,28 @@ components:
           properties:
             author:
               type: integer
+    Error:
+      type: object
+      description: The WordPress REST API error envelope returned on every 4xx/5xx.
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code, e.g. rest_post_invalid_id.
+        message:
+          type: string
+          description: Human-readable error message.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: The HTTP status code.
+            params:
+              type: object
+              description: Per-parameter validation messages (rest_invalid_param only).
+            details:
+              type: object
+              description: Per-parameter validation detail (rest_invalid_param only).
+      required:
+      - code
+      - message

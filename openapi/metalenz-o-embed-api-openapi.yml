@@ -1,26 +1,19 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Metalenz oEmbed API
+  title: Metalenz o Embed API
   version: wp/v2
-  description: Public oEmbed 1.0 provider endpoint for metalenz.com URLs, returning embeddable rich metadata — title,
-    author, provider, thumbnail and iframe HTML — for any published post or page on the site. The endpoint is advertised
-    in the `<head>` of every metalenz.com page as a discoverable oEmbed provider link, and answers anonymously in
-    both JSON and XML.
+  description: Public oEmbed 1.0 provider endpoint for metalenz.com URLs, returning embeddable rich metadata — title, author, provider, thumbnail and iframe HTML — for any published post or page on the site. The endpoint is advertised in the `` of every metalenz.com page as a discoverable oEmbed provider link, and answers anonymously in both JSON and XML.
   contact:
     name: Metalenz
     url: https://metalenz.com/contact-us/
   x-derived-from: https://metalenz.com/wp-json/ route index + per-route HTTP OPTIONS schema documents
   x-derived-on: '2026-08-25'
-  x-api-evangelist-note: Third-party profile. Metalenz is a fabless metasurface-optics (meta-optics) semiconductor
-    company and publishes no developer program, no developer portal and no API documentation; this documents the
-    anonymously readable WordPress REST content API behind metalenz.com. Every path, parameter, enum and property
-    here was read from the server's own published route index and OPTIONS schema documents on 2026-08-25 — nothing
-    is invented.
+  x-api-evangelist-note: Third-party profile. Metalenz is a fabless metasurface-optics (meta-optics) semiconductor company and publishes no developer program, no developer portal and no API documentation; this documents the anonymously readable WordPress REST content API behind metalenz.com. Every path, parameter, enum and property here was read from the server's own published route index and OPTIONS schema documents on 2026-08-25 — nothing is invented.
 servers:
 - url: https://metalenz.com/wp-json
   description: Metalenz WordPress REST API
 tags:
-- name: oEmbed
+- name: o Embed
   description: oEmbed 1.0 rich-embed provider for metalenz.com URLs.
 paths:
   /oembed/1.0/embed:
@@ -28,7 +21,7 @@ paths:
       operationId: getOembed
       summary: Get oEmbed data for a URL
       tags:
-      - oEmbed
+      - o Embed
       description: Return the oEmbed 1.0 representation of a metalenz.com post or page URL.
       parameters:
       - name: format

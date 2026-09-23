@@ -1,21 +1,14 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   title: Metalenz Discovery API
   version: wp/v2
-  description: The self-describing surface of the metalenz.com WordPress REST API — the route index (212 routes
-    across 13 namespaces at capture), the per-namespace indexes, the registered content types and taxonomies, the
-    publication statuses, the public author records and the comment surface. This is what makes the rest of the
-    API machine-readable in the absence of any published documentation.
+  description: The self-describing surface of the metalenz.com WordPress REST API — the route index (212 routes across 13 namespaces at capture), the per-namespace indexes, the registered content types and taxonomies, the publication statuses, the public author records and the comment surface. This is what makes the rest of the API machine-readable in the absence of any published documentation.
   contact:
     name: Metalenz
     url: https://metalenz.com/contact-us/
   x-derived-from: https://metalenz.com/wp-json/ route index + per-route HTTP OPTIONS schema documents
   x-derived-on: '2026-08-25'
-  x-api-evangelist-note: Third-party profile. Metalenz is a fabless metasurface-optics (meta-optics) semiconductor
-    company and publishes no developer program, no developer portal and no API documentation; this documents the
-    anonymously readable WordPress REST content API behind metalenz.com. Every path, parameter, enum and property
-    here was read from the server's own published route index and OPTIONS schema documents on 2026-08-25 — nothing
-    is invented.
+  x-api-evangelist-note: Third-party profile. Metalenz is a fabless metasurface-optics (meta-optics) semiconductor company and publishes no developer program, no developer portal and no API documentation; this documents the anonymously readable WordPress REST content API behind metalenz.com. Every path, parameter, enum and property here was read from the server's own published route index and OPTIONS schema documents on 2026-08-25 — nothing is invented.
 servers:
 - url: https://metalenz.com/wp-json
   description: Metalenz WordPress REST API
@@ -29,10 +22,7 @@ paths:
       summary: Get the API route index
       tags:
       - Discovery
-      description: 'Retrieve the self-describing WordPress REST root document for metalenz.com: site name and description,
-        home URL, the supported authentication schemes, the 13 registered namespaces and all 212 routes with their
-        methods and arguments. This is the document that makes the rest of the surface machine-readable in the absence
-        of any published documentation.'
+      description: 'Retrieve the self-describing WordPress REST root document for metalenz.com: site name and description, home URL, the supported authentication schemes, the 13 registered namespaces and all 212 routes with their methods and arguments. This is the document that makes the rest of the surface machine-readable in the absence of any published documentation.'
       parameters:
       - name: context
         in: query
@@ -67,11 +57,7 @@ paths:
       summary: Get a namespace route index
       tags:
       - Discovery
-      description: 'Retrieve the route index for a single registered namespace. Thirteen namespaces are registered
-        on metalenz.com and every namespace index answers anonymously: `wp/v2`, `oembed/1.0`, `wp-site-health/v1`,
-        `wp-block-editor/v1`, `akismet/v1`, `leadin/v1` (HubSpot), `redirection/v1`, `rankmath/v1` (plus `rankmath/v1/ca`,
-        `rankmath/v1/an`, `rankmath/v1/in`), `webp-converter/v1` and `gravityforms/v2`. The operations inside the
-        plugin namespaces are administrative and answer 401 `rest_forbidden` without credentials.'
+      description: 'Retrieve the route index for a single registered namespace. Thirteen namespaces are registered on metalenz.com and every namespace index answers anonymously: `wp/v2`, `oembed/1.0`, `wp-site-health/v1`, `wp-block-editor/v1`, `akismet/v1`, `leadin/v1` (HubSpot), `redirection/v1`, `rankmath/v1` (plus `rankmath/v1/ca`, `rankmath/v1/an`, `rankmath/v1/in`), `webp-converter/v1` and `gravityforms/v2`. The operations inside the plugin namespaces are administrative and answer 401 `rest_forbidden` without credentials.'
       parameters:
       - name: namespace
         in: path
@@ -98,8 +84,7 @@ paths:
       summary: List content types
       tags:
       - Discovery
-      description: List the registered post types that are visible in the REST API (12 at capture). On metalenz.com
-        the core `post` type is relabelled "Press Releases".
+      description: List the registered post types that are visible in the REST API (12 at capture). On metalenz.com the core `post` type is relabelled "Press Releases".
       parameters:
       - name: context
         in: query
@@ -114,7 +99,7 @@ paths:
       responses:
         '200':
           description: List content types
-          headers: &id001
+          headers:
             X-WP-Total:
               description: Total number of records matching the query.
               schema:
@@ -194,8 +179,7 @@ paths:
       summary: List taxonomies
       tags:
       - Discovery
-      description: List the registered taxonomies visible in the REST API — `category`, `post_tag`, `nav_menu` and
-        `wp_pattern_category` at capture.
+      description: List the registered taxonomies visible in the REST API — `category`, `post_tag`, `nav_menu` and `wp_pattern_category` at capture.
       parameters:
       - name: context
         in: query
@@ -215,7 +199,19 @@ paths:
       responses:
         '200':
           description: List taxonomies
-          headers: *id001
+          headers:
+            X-WP-Total:
+              description: Total number of records matching the query.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the current per_page.
+              schema:
+                type: integer
+            Link:
+              description: RFC 8288 pagination links (rel="next" / rel="prev").
+              schema:
+                type: string
           content:
             application/json:
               schema:
@@ -283,8 +279,7 @@ paths:
       summary: List publication statuses
       tags:
       - Discovery
-      description: List the publication statuses exposed to anonymous callers — `publish` and the `acf-disabled`
-        status registered by Advanced Custom Fields.
+      description: List the publication statuses exposed to anonymous callers — `publish` and the `acf-disabled` status registered by Advanced Custom Fields.
       parameters:
       - name: context
         in: query
@@ -299,7 +294,19 @@ paths:
       responses:
         '200':
           description: List publication statuses
-          headers: *id001
+          headers:
+            X-WP-Total:
+              description: Total number of records matching the query.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the current per_page.
+              schema:
+                type: integer
+            Link:
+              description: RFC 8288 pagination links (rel="next" / rel="prev").
+              schema:
+                type: string
           content:
             application/json:
               schema:
@@ -367,10 +374,7 @@ paths:
       summary: List public authors
       tags:
       - Discovery
-      description: List the WordPress accounts that have authored at least one published post (3 at capture). The
-        anonymous `view` context returns display name, slug, description, site URL, avatar URLs and the author archive
-        link; email address, registration date, role and capability fields are `edit`-context only and are withheld
-        without credentials. Personal data — treat as such.
+      description: List the WordPress accounts that have authored at least one published post (3 at capture). The anonymous `view` context returns display name, slug, description, site URL, avatar URLs and the author archive link; email address, registration date, role and capability fields are `edit`-context only and are withheld without credentials. Personal data — treat as such.
       parameters:
       - name: capabilities
         in: query
@@ -378,8 +382,7 @@ paths:
           type: array
           items:
             type: string
-        description: Limit result set to users matching at least one specific capability provided. Accepts csv list
-          or single capability.
+        description: Limit result set to users matching at least one specific capability provided. Accepts csv list or single capability.
       - name: context
         in: query
         schema:
@@ -478,8 +481,7 @@ paths:
           type: array
           items:
             type: string
-        description: Limit result set to users matching at least one specific role provided. Accepts csv list or
-          single role.
+        description: Limit result set to users matching at least one specific role provided. Accepts csv list or single role.
       - name: search
         in: query
         schema:
@@ -516,7 +518,19 @@ paths:
       responses:
         '200':
           description: List public authors
-          headers: *id001
+          headers:
+            X-WP-Total:
+              description: Total number of records matching the query.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the current per_page.
+              schema:
+                type: integer
+            Link:
+              description: RFC 8288 pagination links (rel="next" / rel="prev").
+              schema:
+                type: string
           content:
             application/json:
               schema:
@@ -584,8 +598,7 @@ paths:
       summary: List comments
       tags:
       - Discovery
-      description: 'List approved comments. Comments are switched off across metalenz.com: the collection answered
-        X-WP-Total 0 at capture.'
+      description: 'List approved comments. Comments are switched off across metalenz.com: the collection answered X-WP-Total 0 at capture.'
       parameters:
       - name: after
         in: query
@@ -737,7 +750,19 @@ paths:
       responses:
         '200':
           description: List comments
-          headers: *id001
+          headers:
+            X-WP-Total:
+              description: Total number of records matching the query.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the current per_page.
+              schema:
+                type: integer
+            Link:
+              description: RFC 8288 pagination links (rel="next" / rel="prev").
+              schema:
+                type: string
           content:
             application/json:
               schema:
@@ -758,79 +783,6 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
-    Error:
-      type: object
-      description: The WordPress REST API error envelope returned on every 4xx/5xx.
-      properties:
-        code:
-          type: string
-          description: Machine-readable error code, e.g. rest_post_invalid_id.
-        message:
-          type: string
-          description: Human-readable error message.
-        data:
-          type: object
-          properties:
-            status:
-              type: integer
-              description: The HTTP status code.
-            params:
-              type: object
-              description: Per-parameter validation messages (rest_invalid_param only).
-            details:
-              type: object
-              description: Per-parameter validation detail (rest_invalid_param only).
-      required:
-      - code
-      - message
-    RouteIndex:
-      type: object
-      description: 'The WordPress REST discovery document: site identity, registered namespaces and every route
-        with its arguments.'
-      properties:
-        name:
-          type: string
-          description: Site title — "Metalenz".
-        description:
-          type: string
-          description: Site tagline — "Metasurface Optics to Enable the Next Generation of Sensing".
-        url:
-          type: string
-          format: uri
-          description: Site URL.
-        home:
-          type: string
-          format: uri
-          description: Home URL.
-        gmt_offset:
-          type: number
-          description: Site GMT offset in hours.
-        timezone_string:
-          type: string
-          description: Site timezone as an Olson identifier, when set.
-        namespaces:
-          type: array
-          items:
-            type: string
-          description: Every registered REST namespace.
-        authentication:
-          type: object
-          description: The authentication schemes the server advertises. metalenz.com advertises WordPress application
-            passwords only.
-        routes:
-          type: object
-          description: Every registered route keyed by its path regex, each carrying its namespace, methods, endpoints
-            and per-argument schemas.
-        site_logo:
-          type: integer
-          description: Attachment ID of the site logo, or 0.
-        site_icon_url:
-          type: string
-          format: uri
-          description: URL of the site icon.
-        _links:
-          type: object
-          description: HAL-style link relations.
     Type:
       title: type
       type: object
@@ -868,8 +820,7 @@ components:
           type: object
           readOnly: true
         has_archive:
-          description: If the value is a string, the value will be used as the archive slug. If the value is false
-            the post type has no archive.
+          description: If the value is a string, the value will be used as the archive slug. If the value is false the post type has no archive.
           type:
           - string
           - boolean
@@ -920,6 +871,42 @@ components:
           - contentOnly
           - false
           description: The template_lock associated with the post type, or false if none.
+          readOnly: true
+    Status:
+      title: status
+      type: object
+      properties:
+        name:
+          description: The title for the status.
+          type: string
+          readOnly: true
+        private:
+          description: Whether posts with this status should be private.
+          type: boolean
+          readOnly: true
+        protected:
+          description: Whether posts with this status should be protected.
+          type: boolean
+          readOnly: true
+        public:
+          description: Whether posts of this status should be shown in the front end of the site.
+          type: boolean
+          readOnly: true
+        queryable:
+          description: Whether posts with this status should be publicly-queryable.
+          type: boolean
+          readOnly: true
+        show_in_list:
+          description: Whether to include posts in the edit listing for their post type.
+          type: boolean
+          readOnly: true
+        slug:
+          description: An alphanumeric identifier for the status.
+          type: string
+          readOnly: true
+        date_floating:
+          description: Whether posts of this status may have floating published dates.
+          type: boolean
           readOnly: true
     Taxonomy:
       title: taxonomy
@@ -973,8 +960,7 @@ components:
           readOnly: true
           properties:
             public:
-              description: Whether a taxonomy is intended for use publicly either via the admin interface or by
-                front-end users.
+              description: Whether a taxonomy is intended for use publicly either via the admin interface or by front-end users.
               type: boolean
             publicly_queryable:
               description: Whether the taxonomy is publicly queryable.
@@ -991,42 +977,97 @@ components:
             show_in_quick_edit:
               description: Whether to show the taxonomy in the quick/bulk edit panel.
               type: boolean
-    Status:
-      title: status
+    Comment:
+      title: comment
       type: object
       properties:
-        name:
-          description: The title for the status.
+        id:
+          description: Unique identifier for the comment.
+          type: integer
+          readOnly: true
+        author:
+          description: The ID of the user object, if author was a user.
+          type: integer
+        author_email:
+          description: Email address for the comment author.
+          type: string
+          format: email
+        author_ip:
+          description: IP address for the comment author.
+          type: string
+          format: ip
+        author_name:
+          description: Display name for the comment author.
+          type: string
+        author_url:
+          description: URL for the comment author.
+          type: string
+          format: uri
+        author_user_agent:
+          description: User agent for the comment author.
+          type: string
+        content:
+          description: The content for the comment.
+          type: object
+          properties:
+            raw:
+              description: Content for the comment, as it exists in the database.
+              type: string
+            rendered:
+              description: HTML content for the comment, transformed for display.
+              type: string
+              readOnly: true
+        date:
+          description: The date the comment was published, in the site's timezone.
+          type: string
+          format: date-time
+        date_gmt:
+          description: The date the comment was published, as GMT.
+          type: string
+          format: date-time
+        link:
+          description: URL to the comment.
+          type: string
+          format: uri
+          readOnly: true
+        parent:
+          description: The ID for the parent of the comment.
+          type: integer
+          default: 0
+        post:
+          description: The ID of the associated post object.
+          type: integer
+          default: 0
+        status:
+          description: State of the comment.
+          type: string
+        type:
+          description: Type of the comment.
           type: string
           readOnly: true
-        private:
-          description: Whether posts with this status should be private.
-          type: boolean
+        author_avatar_urls:
+          description: Avatar URLs for the comment author.
+          type: object
           readOnly: true
-        protected:
-          description: Whether posts with this status should be protected.
-          type: boolean
-          readOnly: true
-        public:
-          description: Whether posts of this status should be shown in the front end of the site.
-          type: boolean
-          readOnly: true
-        queryable:
-          description: Whether posts with this status should be publicly-queryable.
-          type: boolean
-          readOnly: true
-        show_in_list:
-          description: Whether to include posts in the edit listing for their post type.
-          type: boolean
-          readOnly: true
-        slug:
-          description: An alphanumeric identifier for the status.
-          type: string
-          readOnly: true
-        date_floating:
-          description: Whether posts of this status may have floating published dates.
-          type: boolean
-          readOnly: true
+          properties:
+            '24':
+              description: Avatar URL with image size of 24 pixels.
+              type: string
+              format: uri
+            '48':
+              description: Avatar URL with image size of 48 pixels.
+              type: string
+              format: uri
+            '96':
+              description: Avatar URL with image size of 96 pixels.
+              type: string
+              format: uri
+        meta:
+          description: Meta fields.
+          type: object
+        acf:
+          description: ACF field data
+          type: object
     User:
       title: user
       type: object
@@ -1132,94 +1173,73 @@ components:
         acf:
           description: ACF field data
           type: object
-    Comment:
-      title: comment
+    Error:
       type: object
+      description: The WordPress REST API error envelope returned on every 4xx/5xx.
       properties:
-        id:
-          description: Unique identifier for the comment.
-          type: integer
-          readOnly: true
-        author:
-          description: The ID of the user object, if author was a user.
-          type: integer
-        author_email:
-          description: Email address for the comment author.
+        code:
           type: string
-          format: email
-        author_ip:
-          description: IP address for the comment author.
+          description: Machine-readable error code, e.g. rest_post_invalid_id.
+        message:
           type: string
-          format: ip
-        author_name:
-          description: Display name for the comment author.
-          type: string
-        author_url:
-          description: URL for the comment author.
-          type: string
-          format: uri
-        author_user_agent:
-          description: User agent for the comment author.
-          type: string
-        content:
-          description: The content for the comment.
+          description: Human-readable error message.
+        data:
           type: object
           properties:
-            raw:
-              description: Content for the comment, as it exists in the database.
-              type: string
-            rendered:
-              description: HTML content for the comment, transformed for display.
-              type: string
-              readOnly: true
-        date:
-          description: The date the comment was published, in the site's timezone.
+            status:
+              type: integer
+              description: The HTTP status code.
+            params:
+              type: object
+              description: Per-parameter validation messages (rest_invalid_param only).
+            details:
+              type: object
+              description: Per-parameter validation detail (rest_invalid_param only).
+      required:
+      - code
+      - message
+    RouteIndex:
+      type: object
+      description: 'The WordPress REST discovery document: site identity, registered namespaces and every route with its arguments.'
+      properties:
+        name:
           type: string
-          format: date-time
-        date_gmt:
-          description: The date the comment was published, as GMT.
+          description: Site title — "Metalenz".
+        description:
           type: string
-          format: date-time
-        link:
-          description: URL to the comment.
+          description: Site tagline — "Metasurface Optics to Enable the Next Generation of Sensing".
+        url:
           type: string
           format: uri
-          readOnly: true
-        parent:
-          description: The ID for the parent of the comment.
-          type: integer
-          default: 0
-        post:
-          description: The ID of the associated post object.
-          type: integer
-          default: 0
-        status:
-          description: State of the comment.
+          description: Site URL.
+        home:
           type: string
-        type:
-          description: Type of the comment.
+          format: uri
+          description: Home URL.
+        gmt_offset:
+          type: number
+          description: Site GMT offset in hours.
+        timezone_string:
           type: string
-          readOnly: true
-        author_avatar_urls:
-          description: Avatar URLs for the comment author.
+          description: Site timezone as an Olson identifier, when set.
+        namespaces:
+          type: array
+          items:
+            type: string
+          description: Every registered REST namespace.
+        authentication:
           type: object
-          readOnly: true
-          properties:
-            '24':
-              description: Avatar URL with image size of 24 pixels.
-              type: string
-              format: uri
-            '48':
-              description: Avatar URL with image size of 48 pixels.
-              type: string
-              format: uri
-            '96':
-              description: Avatar URL with image size of 96 pixels.
-              type: string
-              format: uri
-        meta:
-          description: Meta fields.
+          description: The authentication schemes the server advertises. metalenz.com advertises WordPress application passwords only.
+        routes:
           type: object
-        acf:
-          description: ACF field data
+          description: Every registered route keyed by its path regex, each carrying its namespace, methods, endpoints and per-argument schemas.
+        site_logo:
+          type: integer
+          description: Attachment ID of the site logo, or 0.
+        site_icon_url:
+          type: string
+          format: uri
+          description: URL of the site icon.
+        _links:
           type: object
+          description: HAL-style link relations.

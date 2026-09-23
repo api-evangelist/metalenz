@@ -1,20 +1,14 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   title: Metalenz Search API
   version: wp/v2
-  description: 'Public, unauthenticated cross-content search over metalenz.com — press releases and static pages
-    together — returning lightweight id / title / url / type / subtype records (34 searchable objects matched the
-    probe term used at capture). Read-only by construction: the route publishes GET only.'
+  description: 'Public, unauthenticated cross-content search over metalenz.com — press releases and static pages together — returning lightweight id / title / url / type / subtype records (34 searchable objects matched the probe term used at capture). Read-only by construction: the route publishes GET only.'
   contact:
     name: Metalenz
     url: https://metalenz.com/contact-us/
   x-derived-from: https://metalenz.com/wp-json/ route index + per-route HTTP OPTIONS schema documents
   x-derived-on: '2026-08-25'
-  x-api-evangelist-note: Third-party profile. Metalenz is a fabless metasurface-optics (meta-optics) semiconductor
-    company and publishes no developer program, no developer portal and no API documentation; this documents the
-    anonymously readable WordPress REST content API behind metalenz.com. Every path, parameter, enum and property
-    here was read from the server's own published route index and OPTIONS schema documents on 2026-08-25 — nothing
-    is invented.
+  x-api-evangelist-note: Third-party profile. Metalenz is a fabless metasurface-optics (meta-optics) semiconductor company and publishes no developer program, no developer portal and no API documentation; this documents the anonymously readable WordPress REST content API behind metalenz.com. Every path, parameter, enum and property here was read from the server's own published route index and OPTIONS schema documents on 2026-08-25 — nothing is invented.
 servers:
 - url: https://metalenz.com/wp-json
   description: Metalenz WordPress REST API
@@ -28,8 +22,7 @@ paths:
       summary: Search site content
       tags:
       - Search
-      description: Search across the publicly queryable content types on metalenz.com and receive lightweight result
-        stubs which link back to the full object via the `_links.self` embeddable reference.
+      description: Search across the publicly queryable content types on metalenz.com and receive lightweight result stubs which link back to the full object via the `_links.self` embeddable reference.
       parameters:
       - name: context
         in: query
@@ -136,31 +129,6 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
-    Error:
-      type: object
-      description: The WordPress REST API error envelope returned on every 4xx/5xx.
-      properties:
-        code:
-          type: string
-          description: Machine-readable error code, e.g. rest_post_invalid_id.
-        message:
-          type: string
-          description: Human-readable error message.
-        data:
-          type: object
-          properties:
-            status:
-              type: integer
-              description: The HTTP status code.
-            params:
-              type: object
-              description: Per-parameter validation messages (rest_invalid_param only).
-            details:
-              type: object
-              description: Per-parameter validation detail (rest_invalid_param only).
-      required:
-      - code
-      - message
     SearchResult:
       title: search-result
       type: object
@@ -197,3 +165,28 @@ components:
           - category
           - post_tag
           readOnly: true
+    Error:
+      type: object
+      description: The WordPress REST API error envelope returned on every 4xx/5xx.
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code, e.g. rest_post_invalid_id.
+        message:
+          type: string
+          description: Human-readable error message.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: The HTTP status code.
+            params:
+              type: object
+              description: Per-parameter validation messages (rest_invalid_param only).
+            details:
+              type: object
+              description: Per-parameter validation detail (rest_invalid_param only).
+      required:
+      - code
+      - message
