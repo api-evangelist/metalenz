@@ -66,12 +66,11 @@ tags:
 - Face Authentication
 - Polarization Imaging
 - 3D Sensing
-- Computer-Vision
+- Computer Vision
 - Consumer Electronics
 - Automotive
 - Robotics
 - Hardware
-- Content
 tags_raw:
 - Company
 - Semiconductors
@@ -88,212 +87,28 @@ tags_raw:
 - Automotive
 - Robotics
 - Hardware
-- Content
+- Computer-Vision
 apis:
-- aid: metalenz:metalenz-press-releases-api
-  name: Metalenz Press Releases API
-  description: >-
-    Public, unauthenticated read access to the Metalenz newsroom via the WordPress core REST API. The
-    `post` content type on metalenz.com is registered with the label "Press Releases" and carries the
-    company's press releases, product launches, funding announcements and award notices back to the February
-    2021 launch out of stealth. Verified live at 26 published items.
-  humanURL: https://metalenz.com/press-releases/
+- aid: metalenz:metalenz-com-website-wordpress-rest
+  name: Metalenz Website (WordPress REST)
+  description: 'The public WordPress REST API (wp-json) of the Metalenz website at metalenz.com: the route
+    index of the site''s content management system, catalogued as one site surface rather than as separate
+    APIs.'
   baseURL: https://metalenz.com/wp-json
   tags:
-  - Press Releases
-  - Newsroom
-  - Content
+  - WordPress
+  x-surface: platform-generated
   properties:
-  - type: OpenAPI
-    url: openapi/metalenz-press-releases-api-openapi.yml
-  - type: Overlay
-    url: overlays/metalenz-press-releases-api-overlay.yaml
-  - type: Authentication
-    url: authentication/metalenz-authentication.yml
-  - type: ErrorCatalog
-    url: errors/metalenz-problem-types.yml
-  - type: Conventions
-    url: conventions/metalenz-conventions.yml
-  - type: DataModel
-    url: data-model/metalenz-data-model.yml
-  - type: Conformance
-    url: conformance/metalenz-conformance.yml
-  - type: Lifecycle
-    url: lifecycle/metalenz-lifecycle.yml
-- aid: metalenz:metalenz-pages-api
-  name: Metalenz Pages API
-  description: >-
-    Public, unauthenticated read access to the static page tree behind metalenz.com — the Polar ID, Polar
-    3D, PolarEyes, Orion and Gemini product pages, the meta-optics and foundational technology explainers,
-    the consumer-electronics, automotive and robotics market pages, About Us, Leadership, Careers, Events,
-    Video Gallery and the Terms and Conditions of Sale. Verified live at 29 published pages.
-  humanURL: https://metalenz.com/
-  baseURL: https://metalenz.com/wp-json
-  tags:
-  - Pages
-  - Content
-  - Product
-  tags_raw:
-  - Pages
-  - Content
-  - Products
-  properties:
-  - type: OpenAPI
-    url: openapi/metalenz-pages-api-openapi.yml
-  - type: Overlay
-    url: overlays/metalenz-pages-api-overlay.yaml
-  - type: Authentication
-    url: authentication/metalenz-authentication.yml
-  - type: ErrorCatalog
-    url: errors/metalenz-problem-types.yml
-  - type: Conventions
-    url: conventions/metalenz-conventions.yml
-  - type: DataModel
-    url: data-model/metalenz-data-model.yml
-  - type: Conformance
-    url: conformance/metalenz-conformance.yml
-  - type: Lifecycle
-    url: lifecycle/metalenz-lifecycle.yml
-- aid: metalenz:metalenz-media-api
-  name: Metalenz Media API
-  description: >-
-    Public, unauthenticated read access to the media library behind metalenz.com — Polar ID and Polar
-    3D product imagery, metasurface and meta-optics diagrams, conference and event photography, leadership
-    headshots, brand and sub-brand logos and press assets, each with its generated size variants. Verified
-    live at 418 attachments.
-  humanURL: https://metalenz.com/media-coverage/
-  baseURL: https://metalenz.com/wp-json
-  tags:
-  - Media
-  - Press Assets
-  - Content
-  properties:
-  - type: OpenAPI
-    url: openapi/metalenz-media-api-openapi.yml
-  - type: Overlay
-    url: overlays/metalenz-media-api-overlay.yaml
-  - type: Authentication
-    url: authentication/metalenz-authentication.yml
-  - type: ErrorCatalog
-    url: errors/metalenz-problem-types.yml
-  - type: Conventions
-    url: conventions/metalenz-conventions.yml
-  - type: DataModel
-    url: data-model/metalenz-data-model.yml
-  - type: Conformance
-    url: conformance/metalenz-conformance.yml
-  - type: Lifecycle
-    url: lifecycle/metalenz-lifecycle.yml
-- aid: metalenz:metalenz-taxonomy-api
-  name: Metalenz Taxonomy API
-  description: >-
-    Public, unauthenticated read access to the classification layer over the Metalenz newsroom — the `category`
-    taxonomy and the `post_tag` taxonomy, with their term records, counts and archive links. Verified
-    live at 1 category and 2 tags (`polar-3d`, `new-products`).
-  humanURL: https://metalenz.com/press-releases/
-  baseURL: https://metalenz.com/wp-json
-  tags:
-  - Taxonomy
-  - Content
-  properties:
-  - type: OpenAPI
-    url: openapi/metalenz-taxonomy-api-openapi.yml
-  - type: Overlay
-    url: overlays/metalenz-taxonomy-api-overlay.yaml
-  - type: Authentication
-    url: authentication/metalenz-authentication.yml
-  - type: ErrorCatalog
-    url: errors/metalenz-problem-types.yml
-  - type: Conventions
-    url: conventions/metalenz-conventions.yml
-  - type: DataModel
-    url: data-model/metalenz-data-model.yml
-  - type: Conformance
-    url: conformance/metalenz-conformance.yml
-  - type: Lifecycle
-    url: lifecycle/metalenz-lifecycle.yml
-- aid: metalenz:metalenz-search-api
-  name: Metalenz Search API
-  description: >-
-    Public, unauthenticated cross-content search over metalenz.com — press releases and static pages together
-    — returning lightweight id / title / url / type / subtype records that link back to the full object.
-    Verified live returning 34 matching objects for the capture probe term.
-  humanURL: https://metalenz.com/
-  baseURL: https://metalenz.com/wp-json
-  tags:
-  - Search
-  - Content
-  properties:
-  - type: OpenAPI
-    url: openapi/metalenz-search-api-openapi.yml
-  - type: Overlay
-    url: overlays/metalenz-search-api-overlay.yaml
-  - type: Authentication
-    url: authentication/metalenz-authentication.yml
-  - type: ErrorCatalog
-    url: errors/metalenz-problem-types.yml
-  - type: Conventions
-    url: conventions/metalenz-conventions.yml
-  - type: Conformance
-    url: conformance/metalenz-conformance.yml
-  - type: Lifecycle
-    url: lifecycle/metalenz-lifecycle.yml
-- aid: metalenz:metalenz-discovery-api
-  name: Metalenz Discovery API
-  description: >-
-    The self-describing surface of the metalenz.com WordPress REST API — the route index, the per-namespace
-    indexes, the registered content types and taxonomies, the publication statuses, the public author
-    records and the comment surface. This is what makes the rest of the API machine-readable in the absence
-    of any published documentation. Verified live at 212 routes across 13 namespaces.
-  humanURL: https://metalenz.com/wp-json/
-  baseURL: https://metalenz.com/wp-json
-  tags:
-  - Discovery
-  - Metadata
-  - Content
-  properties:
-  - type: OpenAPI
-    url: openapi/metalenz-discovery-api-openapi.yml
-  - type: Overlay
-    url: overlays/metalenz-discovery-api-overlay.yaml
-  - type: Authentication
-    url: authentication/metalenz-authentication.yml
-  - type: ErrorCatalog
-    url: errors/metalenz-problem-types.yml
-  - type: Conventions
-    url: conventions/metalenz-conventions.yml
-  - type: Conformance
-    url: conformance/metalenz-conformance.yml
-  - type: Lifecycle
-    url: lifecycle/metalenz-lifecycle.yml
-- aid: metalenz:metalenz-o-embed-api
-  name: Metalenz o Embed API
-  description: oEmbed 1.0 rich-embed provider for metalenz.com URLs.
-  humanURL: https://metalenz.com/press-releases/
-  baseURL: https://metalenz.com/wp-json
-  tags:
-  - oEmbed
-  tags_raw:
-  - o Embed
-  properties:
-  - type: OpenAPI
-    url: openapi/metalenz-o-embed-api-openapi.yml
-  - type: Authentication
-    url: authentication/metalenz-authentication.yml
-  - type: ErrorCatalog
-    url: errors/metalenz-problem-types.yml
-  - type: Conventions
-    url: conventions/metalenz-conventions.yml
-  - type: Conformance
-    url: conformance/metalenz-conformance.yml
+  - type: Documentation
+    url: https://metalenz.com/wp-json
+  x-platform: wordpress
+  x-platform-surface: rest
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
-- type: Overlay
-  url: overlays/metalenz-oembed-api-overlay.yaml
 - type: CapabilityMap
   url: capabilities/metalenz-capability-edges.yml
   name: Metalenz Business Capability Map
@@ -368,3 +183,5 @@ x-enrichment:
   status: enriched
   artifacts_added: 33
   pass: local-v1
+x-tags-removed:
+- Content
