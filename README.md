@@ -66,33 +66,109 @@
 
 Metalenz is a fabless semiconductor optics company in Boston, Massachusetts that commercialises meta-optics — flat metasurface lenses that replace stacks of curved refractive elements with a single planar chip patterned by nanostructures and mass produced in a standard semiconductor foundry. The company was founded in 2016 by CEO Rob Devlin and Harvard professor Federico Capasso out of the Capasso Lab at the Harvard John A. Paulson School of Engineering and Applied Sciences, and holds the exclusive worldwide licence to that lab's metasurface intellectual property, now more than 150 issued and pending patents. Its first-generation metasurfaces reached mass production in 2022 through a manufacturing partnership with STMicroelectronics and have since shipped in well over 100 million consumer devices. The current product line is built on the PolarEyes polarization imaging platform: Polar ID, a single-camera polarization face authentication system for smartphones that works under the display and uses the Samsung ISOCELL Vizion 931 sensor and Qualcomm Snapdragon imaging stack; Polar 3D, on-device relightable selfies and avatars from one image; and the Orion and Gemini dot-pattern projectors for structured-light 3D sensing. Metalenz sells optical components, licences and full-stack biometric solutions to device makers and foundries — UMC and STMicroelectronics are named manufacturing partners — and is backed by Neotribe Ventures, Intel Capital, TDK Ventures, 3M, Applied Ventures, M Ventures, Braemar Energy Ventures and Foothill Ventures. It sells silicon and IP, not software: it publishes no developer program, no developer portal, no SDK and no API documentation of any kind. The only machine-readable interface it exposes to the public is the WordPress REST content API behind metalenz.com, which is anonymously readable, read-only without credentials, and captured here for discovery purposes.
 
-## APIs
+**Areas:** Company · Semiconductors · Optics · Meta-Optics · Metasurface · Photonics · Biometrics · Face Authentication · Polarization Imaging · 3D Sensing · Computer Vision · Consumer Electronics
 
-- **Metalenz Press Releases API** — `https://metalenz.com/wp-json`
-- **Metalenz Pages API** — `https://metalenz.com/wp-json`
-- **Metalenz Media API** — `https://metalenz.com/wp-json`
-- **Metalenz Taxonomy API** — `https://metalenz.com/wp-json`
-- **Metalenz Search API** — `https://metalenz.com/wp-json`
-- **Metalenz Discovery API** — `https://metalenz.com/wp-json`
-- **Metalenz oEmbed API** — `https://metalenz.com/wp-json`
+## Metalenz on APIs.io
 
-## Links
+Everything profiled for Metalenz is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/metalenz/](https://apis.io/providers/metalenz/)** — or go straight to one of the APIs or properties below.
 
-- Website: https://metalenz.com/
-- About: https://metalenz.com/about-us/
-- Leadership: https://metalenz.com/leadership/
-- Products: https://metalenz.com/all-products/
-- Technology: https://metalenz.com/our-technology/
-- Press: https://metalenz.com/press-releases/
-- News: https://metalenz.com/media-coverage/
-- Events: https://metalenz.com/events/
-- Videos: https://metalenz.com/video-gallery/
-- BlogRSS: https://metalenz.com/feed/
-- Support: https://metalenz.com/contact-us/
-- Contact: https://metalenz.com/contact-us/
-- Careers: https://metalenz.com/careers/
-- SiteMap: https://metalenz.com/sitemap_index.xml
-- DocumentationPortal: https://docs.metalenz.com/
-- TermsOfService: https://metalenz.com/terms-and-conditions-of-sale/
-- GitHubOrganization: https://github.com/Metalenz
-- LinkedIn: https://www.linkedin.com/company/metalenz/
+### APIs (1)
+
+- [Metalenz Website (WordPress REST)](https://apis.io/apis/metalenz/metalenz-com-website-wordpress-rest/) — The public WordPress REST API (wp-json) of the Metalenz website at metalenz.com: the route index of the site's content management system, catalogued as one…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [metalenz](https://apis.io/servers/metalenz/metalenz/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Metalenz Agentic Access](https://apis.io/agentic-access/metalenz/metalenz-agentic-access/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Metalenz Authentication](https://apis.io/security/metalenz/metalenz-authentication/)
+- [Metalenz Domain Security](https://apis.io/security/metalenz/metalenz-domain-security/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Metalenz Plans Pricing](https://apis.io/plans/metalenz/metalenz-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Metalenz Rate Limits](https://apis.io/rate-limits/metalenz/metalenz-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://metalenz.com/)
+- [Support](https://metalenz.com/contact-us/)
+- [Terms of service](https://metalenz.com/terms-and-conditions-of-sale/)
+- [GitHub](https://github.com/Metalenz)
+
+## API Evangelist rating
+
+**Kin Score 16.9** — emerging · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 66.1 |
+| Contract quality | 6.5 |
+| Contract governance | 4.5 |
+| Operational transparency | 2.6 |
+| Developer ergonomics | 28.0 |
+| Access clarity | 10.5 |
+
+**Agent readiness 11.9** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | — |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | documented (partial credit) |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 18.4** — AI & Biometrics
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/metalenz/](https://apis.io/providers/metalenz/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Metalenz: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/metalenz/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
